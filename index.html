@@ -3,605 +3,523 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexaSync – Enterprise File Sync & Backup Solution</title>
+  <title>ModSync – ゲームMod自動検出・更新ツール</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:      #0b0d12;
-      --surface: #111318;
-      --surface2:#161921;
-      --border:  #1e2230;
-      --border2: #252a3a;
-      --accent:  #3b7eff;
-      --accent2: #6a3bff;
-      --green:   #22c55e;
-      --red:     #ef4444;
-      --amber:   #f59e0b;
-      --text:    #dde2ef;
-      --muted:   #636b88;
-      --mono:    'JetBrains Mono', monospace;
+      --bg:       #070d0d;
+      --surface:  #0c1414;
+      --surface2: #101c1c;
+      --border:   #163030;
+      --border2:  #1e4040;
+      --accent:   #0fd4a8;
+      --accent2:  #0aa8c8;
+      --accentdim:#0a8a70;
+      --green:    #22c55e;
+      --red:      #ef4444;
+      --amber:    #f59e0b;
+      --text:     #d4ecea;
+      --muted:    #4a7070;
+      --mono:     'JetBrains Mono', monospace;
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
 
     /* ── TOPBAR ── */
     .topbar {
-      background: rgba(11,13,18,.94);
-      backdrop-filter: blur(14px);
+      background: rgba(7,13,13,.96); backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 200;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 48px; height: 54px;
     }
-    .logo {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 700; font-size: 17px; letter-spacing: -.4px;
-    }
-    .logo-mark {
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.4px; cursor: pointer; color: var(--text); }
+    .logo-mark { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .logo-mark svg { width: 15px; height: 15px; }
     .nav { display: flex; gap: 28px; }
-    .nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .15s; }
+    .nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .15s; cursor: pointer; }
     .nav a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--accent); color: #fff; border: none;
-      padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
-      transition: background .15s; letter-spacing: .1px;
-    }
-    .nav-cta:hover { background: #2d6ee0; }
+    .nav-cta { background: var(--accent); color: #031010; border: none; padding: 7px 18px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s; letter-spacing: .1px; }
+    .nav-cta:hover { background: var(--accent2); }
 
     /* ── HERO ── */
     .hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: stretch;
-      width: 100%;
-      height: calc(100dvh - 54px);
-      padding: 0 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
+      align-items: stretch; width: 100%; height: calc(100dvh - 54px); padding: 0 48px;
     }
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px 0;
-    }
-    .hero-left {}
+    .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 48px 0; }
+
     .badge {
       display: inline-flex; align-items: center; gap: 7px;
-      border: 1px solid var(--border2);
-      color: var(--muted);
+      border: 1px solid var(--border2); color: var(--muted);
       font-size: 11px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase;
-      padding: 4px 12px; margin-bottom: 24px;
-      background: var(--surface);
+      padding: 4px 12px; margin-bottom: 24px; background: var(--surface);
     }
-    .badge-dot {
-      width: 6px; height: 6px;
-      background: var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.35} }
+    .badge-dot { width: 6px; height: 6px; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
 
-    h1 {
-      font-size: clamp(32px, 3.5vw, 50px);
-      font-weight: 700;
-      letter-spacing: -1.5px;
-      line-height: 1.08;
-      margin-bottom: 18px;
-    }
-    h1 em {
-      font-style: normal;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .hero-sub {
-      font-size: 15px; color: var(--muted); line-height: 1.75;
-      margin-bottom: 36px; max-width: 440px;
-    }
+    h1 { font-size: clamp(30px, 3.2vw, 48px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; }
+    h1 em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 36px; max-width: 440px; }
 
-    .dl-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 24px;
-    }
+    .dl-box { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
     .dl-meta { display: flex; gap: 20px; margin-bottom: 18px; flex-wrap: wrap; }
     .dl-meta-item { display: flex; flex-direction: column; gap: 2px; }
     .dl-meta-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
     .dl-meta-value { font-size: 13px; font-weight: 600; font-family: var(--mono); }
+    .dl-meta-value.em { color: var(--accent); }
     .dl-meta-value.green { color: var(--green); }
-    .dl-btn {
-      width: 100%;
-      background: var(--accent);
-      color: #fff; border: none;
-      padding: 13px 20px;
-      font-size: 14px; font-weight: 700;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 9px;
-      transition: background .15s;
-      margin-bottom: 10px;
-      position: relative; overflow: hidden;
-      letter-spacing: .1px;
-    }
-    .dl-btn:hover { background: #2d6ee0; }
-    .dl-btn::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent);
-      transform: translateX(-100%);
-      animation: shimmer 2.6s infinite;
-    }
-    @keyframes shimmer { to { transform: translateX(100%); } }
-    .dl-note { font-size: 11px; color: var(--muted); text-align: center; }
 
-    .trust-row {
-      display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap;
+    .dl-btn-win {
+      width: 100%; background: var(--accent); color: #031010; border: none;
+      padding: 13px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      transition: background .15s; margin-bottom: 10px; position: relative; overflow: hidden;
     }
+    .dl-btn-win:hover { background: var(--accent2); color: #fff; }
+    .dl-btn-win::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent); transform:translateX(-100%); animation:shimmer 2.6s infinite; }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    .dl-btn-mac { width: 100%; background: none; color: var(--muted); border: 1px solid var(--border2); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: border-color .15s, color .15s; margin-bottom: 10px; }
+    .dl-btn-mac:hover { border-color: var(--accent); color: var(--text); }
+    .dl-note { font-size: 11px; color: var(--muted); text-align: center; }
+    .dl-note a { color: var(--muted); cursor: pointer; text-decoration: underline; }
+    .dl-note a:hover { color: var(--text); }
+
+    .trust-row { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
     .trust-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
 
-    /* ── APP MOCKUP ── */
-    .hero-right {
-      display: flex;
-      flex-direction: column;
-      padding: 32px 0;
-    }
-    .mockup {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      font-family: var(--mono);
-      font-size: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-    /* window chrome */
-    .mock-chrome {
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 0;
-      padding: 0;
-      height: 34px;
-    }
-    .mock-chrome-btns {
-      display: flex; align-items: center; gap: 6px;
-      padding: 0 14px;
-      border-right: 1px solid var(--border);
-      height: 100%;
-    }
+    /* ── MOCKUP ── */
+    .hero-right { display: flex; flex-direction: column; padding: 28px 0; }
+    .mockup { border: 1px solid var(--border); background: var(--surface); font-family: var(--mono); font-size: 12px; overflow: hidden; display: flex; flex-direction: column; flex: 1; }
+    .mock-chrome { background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; align-items: center; height: 34px; flex-shrink: 0; }
+    .mock-chrome-btns { display: flex; align-items: center; gap: 6px; padding: 0 14px; border-right: 1px solid var(--border); height: 100%; }
     .mock-cb { width: 10px; height: 10px; }
-    .mock-cb.close  { background: var(--red);   }
-    .mock-cb.min    { background: var(--amber);  }
-    .mock-cb.max    { background: var(--green);  }
-    .mock-title {
-      flex: 1; text-align: center;
-      font-size: 11px; color: var(--muted);
-      letter-spacing: .3px;
-    }
+    .mock-cb.close { background: var(--red); }
+    .mock-cb.min   { background: var(--amber); }
+    .mock-cb.max   { background: var(--green); }
+    .mock-wintitle { flex: 1; text-align: center; font-size: 11px; color: var(--muted); }
+    .mock-badge { margin-right: 12px; font-size: 9px; background: rgba(15,212,168,.15); color: var(--accent); border: 1px solid rgba(15,212,168,.3); padding: 2px 8px; letter-spacing: .4px; }
+
     .mock-body { display: flex; flex: 1; min-height: 0; }
 
     /* sidebar */
-    .mock-sidebar {
-      width: 180px; flex-shrink: 0;
-      border-right: 1px solid var(--border);
-      background: var(--surface2);
-      display: flex; flex-direction: column;
-    }
-    .mock-sb-header {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      font-size: 10px; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .7px;
-    }
-    .mock-sb-item {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px;
-      font-size: 12px; color: var(--muted);
-      border-bottom: 1px solid rgba(30,34,48,.6);
-      cursor: default;
-    }
-    .mock-sb-item.active { color: var(--text); background: rgba(59,126,255,.1); border-left: 2px solid var(--accent); }
-    .mock-sb-icon { width: 14px; height: 14px; flex-shrink: 0; }
-    .mock-sb-badge {
-      margin-left: auto; font-size: 9px;
-      background: var(--accent); color: #fff;
-      padding: 1px 5px; font-family: var(--mono);
-    }
+    .mock-sidebar { width: 170px; flex-shrink: 0; border-right: 1px solid var(--border); background: var(--surface2); display: flex; flex-direction: column; overflow: hidden; }
+    .mock-sb-section { padding: 8px 10px 4px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
+    .mock-sb-item { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 11px; color: var(--muted); border-bottom: 1px solid rgba(22,48,48,.5); cursor: default; white-space: nowrap; overflow: hidden; }
+    .mock-sb-item.active { color: var(--accent); background: rgba(15,212,168,.07); border-left: 2px solid var(--accent); }
+    .mock-sb-icon { width: 13px; height: 13px; flex-shrink: 0; }
+    .mock-sb-count { margin-left: auto; font-size: 9px; padding: 1px 5px; }
+    .mock-sb-count.red { background: rgba(239,68,68,.2); color: var(--red); }
+    .mock-sb-count.teal { background: rgba(15,212,168,.15); color: var(--accent); }
+    .mock-sb-count.muted { background: var(--border); color: var(--muted); }
 
-    /* main content */
-    .mock-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .mock-toolbar {
-      display: flex; align-items: center; gap: 0;
-      border-bottom: 1px solid var(--border);
-      height: 34px; padding: 0 12px; gap: 8px;
-    }
-    .mock-tb-btn {
-      font-size: 11px; color: var(--muted);
-      padding: 3px 10px;
-      border: 1px solid var(--border);
-      background: none; cursor: default;
-      display: flex; align-items: center; gap: 5px;
-    }
-    .mock-tb-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .mock-search {
-      margin-left: auto;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 3px 10px;
-      font-size: 11px; color: var(--muted); font-family: var(--mono);
-      width: 140px;
-    }
+    /* game tabs */
+    .mock-game-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .mock-tab { padding: 6px 12px; font-size: 10px; color: var(--muted); border-right: 1px solid var(--border); cursor: default; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+    .mock-tab.active { color: var(--accent); background: rgba(15,212,168,.05); border-bottom: 1px solid var(--accent); }
 
-    /* file table */
+    /* toolbar */
+    .mock-toolbar { display: flex; align-items: center; border-bottom: 1px solid var(--border); height: 32px; padding: 0 10px; gap: 6px; flex-shrink: 0; }
+    .mock-tb-btn { font-size: 10px; color: var(--muted); padding: 2px 9px; border: 1px solid var(--border); background: none; cursor: default; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .mock-tb-btn.primary { background: var(--accent); color: #031010; border-color: var(--accent); font-weight: 700; }
+    .mock-tb-btn.warn { border-color: rgba(245,158,11,.4); color: var(--amber); }
+    .mock-search { margin-left: auto; background: var(--bg); border: 1px solid var(--border); padding: 2px 9px; font-size: 10px; color: var(--muted); font-family: var(--mono); width: 130px; }
+
+    /* mod table */
     .mock-table { flex: 1; overflow: hidden; }
-    .mock-th {
-      display: grid;
-      grid-template-columns: 1fr 90px 80px 60px;
-      font-size: 10px; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .5px;
-      padding: 6px 12px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface2);
-    }
-    .mock-row {
-      display: grid;
-      grid-template-columns: 1fr 90px 80px 60px;
-      padding: 7px 12px;
-      border-bottom: 1px solid rgba(30,34,48,.5);
-      font-size: 11px; color: var(--muted);
-      align-items: center;
-    }
-    .mock-row:hover { background: rgba(59,126,255,.04); }
-    .mock-row.selected { background: rgba(59,126,255,.09); color: var(--text); }
-    .mock-fname { display: flex; align-items: center; gap: 7px; }
-    .mock-fname svg { flex-shrink: 0; }
-    .mock-status { display: flex; align-items: center; gap: 5px; }
-    .mock-dot { width: 6px; height: 6px; flex-shrink: 0; }
-    .mock-dot.synced  { background: var(--green); }
-    .mock-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
-    .mock-dot.pending { background: var(--amber); }
+    .mock-th { display: grid; grid-template-columns: 24px 1fr 60px 70px 54px 60px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 5px 10px; border-bottom: 1px solid var(--border); background: var(--surface2); align-items: center; }
+    .mock-row { display: grid; grid-template-columns: 24px 1fr 60px 70px 54px 60px; padding: 6px 10px; border-bottom: 1px solid rgba(22,48,48,.5); font-size: 11px; color: var(--muted); align-items: center; }
+    .mock-row:hover { background: rgba(15,212,168,.03); }
+    .mock-row.update { background: rgba(15,212,168,.04); }
+    .mock-row.error  { background: rgba(239,68,68,.04); }
+    .mock-chk { width: 10px; height: 10px; border: 1px solid var(--border2); flex-shrink: 0; }
+    .mock-chk.on { background: var(--accent); border-color: var(--accent); }
+    .mock-mod-name { display: flex; align-items: center; gap: 6px; overflow: hidden; }
+    .mock-mod-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mock-tag { font-size: 8px; padding: 1px 5px; flex-shrink: 0; }
+    .mock-tag.update { background: rgba(15,212,168,.18); color: var(--accent); }
+    .mock-tag.ok     { background: rgba(34,197,94,.12); color: var(--green); }
+    .mock-tag.error  { background: rgba(239,68,68,.18); color: var(--red); }
+    .mock-tag.manual { background: rgba(245,158,11,.15); color: var(--amber); }
+    .mock-ver { font-family: var(--mono); font-size: 10px; }
+    .mock-ver.new { color: var(--accent); }
+    .mock-src { font-size: 10px; }
+
+    /* progress cell */
+    .mock-prog { display: flex; align-items: center; gap: 4px; }
+    .mock-prog-bar { flex: 1; height: 3px; background: var(--border); }
+    .mock-prog-fill { height: 100%; background: var(--accent); }
 
     /* statusbar */
-    .mock-statusbar {
-      border-top: 1px solid var(--border);
-      padding: 4px 12px;
-      font-size: 10px; color: var(--muted);
-      display: flex; gap: 20px; align-items: center;
-      background: var(--surface2);
-    }
-    .mock-sb-led { width: 6px; height: 6px; background: var(--green); display: inline-block; margin-right: 5px; animation: pulse 2s infinite; }
+    .mock-statusbar { border-top: 1px solid var(--border); padding: 3px 10px; font-size: 10px; color: var(--muted); display: flex; gap: 16px; align-items: center; background: var(--surface2); flex-shrink: 0; }
+    .mock-led { width: 5px; height: 5px; display: inline-block; margin-right: 4px; }
+    .mock-led.green { background: var(--accent); animation: pulse 2s infinite; }
+    .mock-led.amber { background: var(--amber); animation: pulse 1s infinite; }
 
     /* ── STATS ── */
-    .stats-wrap {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 40px 48px;
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: 0;
-    }
+    .stats-outer { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 48px; display: flex; }
     .stat { flex: 1; text-align: center; border-right: 1px solid var(--border); padding: 0 24px; }
     .stat:first-child { text-align: left; padding-left: 0; }
     .stat:last-child { border-right: none; }
-    .stat-num { font-size: 34px; font-weight: 700; letter-spacing: -1.2px; }
+    .stat-num { font-size: 34px; font-weight: 700; letter-spacing: -1.2px; color: var(--accent); }
     .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
     /* ── SECTIONS ── */
-    .section { max-width: 1100px; margin: 88px auto; padding: 0 48px; }
+    .section { max-width: 1100px; margin: 80px auto; padding: 0 48px; }
     .section-label { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; margin-bottom: 10px; }
-    .section-title { font-size: clamp(22px, 2.5vw, 34px); font-weight: 700; letter-spacing: -.6px; margin-bottom: 44px; }
+    .section-title { font-size: clamp(22px, 2.5vw, 34px); font-weight: 700; letter-spacing: -.6px; margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
 
     .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
     .feature { background: var(--surface); padding: 28px 24px; transition: background .15s; }
     .feature:hover { background: var(--surface2); }
     .feat-icon { width: 32px; height: 32px; margin-bottom: 14px; }
-    .feat-title { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
+    .feat-title { font-size: 14px; font-weight: 650; margin-bottom: 8px; color: var(--text); }
     .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-    /* ── CHANGELOG ── */
-    .changelog { border: 1px solid var(--border); }
-    .cl-entry { display: flex; gap: 20px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
-    .cl-entry:last-child { border-bottom: none; }
-    .cl-ver { font-family: var(--mono); font-size: 12px; color: var(--accent); min-width: 58px; font-weight: 600; padding-top: 2px; }
-    .cl-text { font-size: 13px; color: var(--muted); line-height: 1.65; }
-    .cl-text strong { color: var(--text); }
+    /* ── GAME COMPAT ── */
+    .compat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .compat-item { background: var(--surface); padding: 14px 16px; display: flex; align-items: center; gap: 10px; transition: background .15s; }
+    .compat-item:hover { background: var(--surface2); }
+    .compat-dot { width: 7px; height: 7px; flex-shrink: 0; }
+    .compat-dot.full { background: var(--accent); }
+    .compat-dot.part { background: var(--amber); }
+    .compat-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .compat-tag { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
-    /* ── SYSTEM REQ ── */
-    .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .req-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; }
-    .req-os { font-weight: 700; margin-bottom: 14px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
-    .req-os-icon { width: 16px; height: 16px; }
-    .req-row { display: flex; justify-content: space-between; font-size: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); }
-    .req-row:last-child { border-bottom: none; }
-    .req-key { color: var(--muted); }
-    .req-val { font-family: var(--mono); }
+    /* ── PRICING ── */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .price-card { background: var(--surface); padding: 32px 28px; display: flex; flex-direction: column; }
+    .price-card.popular { background: var(--surface2); position: relative; }
+    .popular-badge { position: absolute; top: -1px; right: 28px; background: var(--accent); color: #031010; font-size: 10px; font-weight: 700; padding: 3px 10px; letter-spacing: .5px; }
+    .price-name { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .price-amount { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; color: var(--text); }
+    .price-amount span { font-size: 14px; font-weight: 400; color: var(--muted); }
+    .price-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .price-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
+    .price-feat { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+    .price-feat svg { flex-shrink: 0; margin-top: 2px; }
+    .price-feat.enabled { color: var(--text); }
+    .price-feat.disabled { color: var(--muted); opacity: .35; }
+    .price-btn { border: 1px solid var(--border2); background: none; color: var(--text); padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
+    .price-btn:hover { background: var(--border); }
+    .price-btn.primary { background: var(--accent); border-color: var(--accent); color: #031010; font-weight: 700; }
+    .price-btn.primary:hover { background: var(--accent2); color: #fff; }
+
+    /* ── FAQ ── */
+    .faq { border: 1px solid var(--border); }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { padding: 18px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background .15s; user-select: none; }
+    .faq-q:hover { background: var(--surface2); }
+    .faq-arrow { transition: transform .2s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a { font-size: 13px; color: var(--muted); line-height: 1.75; padding: 0 20px 18px; display: none; }
+    .faq-item.open .faq-a { display: block; }
 
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 48px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 12px; color: var(--muted);
-    }
+    footer { border-top: 1px solid var(--border); padding: 28px 48px; font-size: 12px; color: var(--muted); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--muted); text-decoration: none; cursor: pointer; transition: color .15s; }
+    .footer-links a:hover { color: var(--text); }
 
-    /* ── MODAL ── */
-    .overlay {
-      position: fixed; inset: 0; z-index: 999;
-      background: rgba(0,0,0,.82);
-      backdrop-filter: blur(6px);
-      display: none; align-items: center; justify-content: center;
-      animation: fadeIn .25s;
-    }
+    /* ── MODALS ── */
+    .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; }
+    .overlay.active { display: flex; animation: fadeIn .22s; }
     @keyframes fadeIn { from{opacity:0}to{opacity:1} }
-    .overlay.active { display: flex; }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      padding: 36px;
-      max-width: 520px; width: 90%;
-      text-align: center;
-      animation: slideUp .3s cubic-bezier(.22,1,.36,1);
-    }
-    @keyframes slideUp { from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1} }
-
+    .modal { background: var(--surface); border: 1px solid var(--border2); padding: 36px; max-width: 520px; width: 90%; text-align: center; animation: slideUp .28s cubic-bezier(.22,1,.36,1); position: relative; }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1} }
+    .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; }
+    .modal-close:hover { color: var(--text); }
     .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 4px; }
     .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
 
     .progress-wrap { margin-bottom: 20px; }
     .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 7px; font-family: var(--mono); }
     .progress-bar { height: 3px; background: var(--border); }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      width: 0%;
-      transition: width .04s linear;
-    }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0%; }
     .progress-steps { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; text-align: left; }
     .step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
     .step.active { color: var(--text); }
-    .step.done { color: var(--green); }
+    .step.done { color: var(--accent); }
     .step-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
-    .yt-wrap { margin-top: 16px; overflow: hidden; border: 1px solid var(--border); display: none; }
-    .yt-wrap.show { display: block; }
-    .yt-wrap iframe { display: block; width: 100%; border: none; }
+    .modal-text { max-width: 640px; text-align: left; max-height: 80vh; overflow-y: auto; padding-right: 4px; }
+    .modal-text::-webkit-scrollbar { width: 4px; }
+    .modal-text::-webkit-scrollbar-thumb { background: var(--border2); }
+    .modal-text h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .modal-text .modal-date { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 24px; }
+    .modal-text h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--accent); margin: 20px 0 8px; }
+    .modal-text p { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 10px; }
+    .modal-text ul { padding-left: 18px; }
+    .modal-text li { font-size: 13px; color: var(--muted); line-height: 1.75; }
 
-    @media(max-width: 800px) {
-      .hero { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+    .mac-options { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+    .mac-opt { border: 1px solid var(--border2); padding: 16px 18px; cursor: pointer; display: flex; align-items: center; gap: 14px; text-align: left; transition: border-color .15s; background: none; width: 100%; }
+    .mac-opt:hover { border-color: var(--accent); }
+    .mac-opt-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .mac-opt-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    @media(max-width:800px) {
+      .hero { grid-template-columns: 1fr; height: auto; padding: 48px 24px; }
       .hero-right { display: none; }
-      .topbar { padding: 0 20px; }
-      .nav { display: none; }
+      .topbar { padding: 0 20px; } .nav { display: none; }
       .stats-wrap { flex-direction: column; gap: 24px; padding: 32px 24px; }
       .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 24px; text-align: left; }
       .stat:last-child { border-bottom: none; padding-bottom: 0; }
       .features { grid-template-columns: 1fr; }
-      .req-grid { grid-template-columns: 1fr; }
-      .section { padding: 0 24px; margin: 60px auto; }
-      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .compat-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .section { padding: 0 24px; margin: 56px auto; }
+      footer { padding: 24px; }
     }
   </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <header class="topbar">
-  <div class="logo">
+  <div class="logo" onclick="scrollTo({top:0,behavior:'smooth'})">
     <div class="logo-mark">
-      <svg viewBox="0 0 15 15" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="square">
-        <path d="M7.5 1v13M2 4l5.5 3 5.5-3M2 11l5.5-3 5.5 3"/>
+      <svg viewBox="0 0 15 15" fill="none" stroke="#031010" stroke-width="2" stroke-linecap="square">
+        <path d="M3 10V5l4.5-3L12 5v5l-4.5 3z"/><path d="M7.5 2v11M3 7.5h9"/>
       </svg>
     </div>
-    NexaSync
+    ModSync
   </div>
   <nav class="nav">
-    <a href="#">機能</a>
-    <a href="#">ドキュメント</a>
-    <a href="#">価格</a>
-    <a href="#">サポート</a>
-    <a href="#">ブログ</a>
+    <a onclick="scrollToSection('features')">機能</a>
+    <a onclick="scrollToSection('compat')">対応ゲーム</a>
+    <a onclick="scrollToSection('pricing')">価格</a>
+    <a onclick="scrollToSection('faq')">FAQ</a>
+    <a onclick="openModal('changelog-modal')">更新履歴</a>
   </nav>
-  <button class="nav-cta" onclick="startDownload()">今すぐ入手</button>
+  <button class="nav-cta" onclick="startDownload('win')">無料ダウンロード</button>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="badge"><span class="badge-dot"></span>v4.2.1 — 安定版</div>
-    <h1>ファイル同期を、<br><em>次世代へ。</em></h1>
+    <div class="badge"><span class="badge-dot"></span>v1.8.2 公開 — Nexus Mods / CurseForge 対応</div>
+    <h1>入れたModを、<br><em>全部まとめて管理する。</em></h1>
     <p class="hero-sub">
-      リアルタイムのデルタ同期エンジンと AES-256 暗号化を統合した
-      エンタープライズ向けバックアップソリューション。
-      個人のワークフローから大規模インフラまで対応します。
+      インストール済みのModを自動で検出し、最新バージョンへの更新を一括で行います。
+      競合チェック・バックアップ・ロールバックまで対応。
+      Mod管理に費やす時間をゼロにして、ゲームに集中してください。
     </p>
-
     <div class="dl-box">
       <div class="dl-meta">
         <div class="dl-meta-item">
           <span class="dl-meta-label">バージョン</span>
-          <span class="dl-meta-value">4.2.1</span>
+          <span class="dl-meta-value">1.8.2</span>
         </div>
         <div class="dl-meta-item">
-          <span class="dl-meta-label">サイズ</span>
-          <span class="dl-meta-value">48.3 MB</span>
+          <span class="dl-meta-label">対応ソース</span>
+          <span class="dl-meta-value em">Nexus / CF / GitHub</span>
         </div>
         <div class="dl-meta-item">
-          <span class="dl-meta-label">ビルド</span>
-          <span class="dl-meta-value">20251204</span>
+          <span class="dl-meta-label">更新日</span>
+          <span class="dl-meta-value">2025-12-01</span>
         </div>
         <div class="dl-meta-item">
-          <span class="dl-meta-label">ステータス</span>
-          <span class="dl-meta-value green">安定版</span>
+          <span class="dl-meta-label">ライセンス</span>
+          <span class="dl-meta-value green">無料</span>
         </div>
       </div>
-      <button class="dl-btn" onclick="startDownload()">
-        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
-          <path d="M12 3v13M5 16l7 7 7-7M3 21h18"/>
-        </svg>
-        Windows 向けダウンロード
+      <button class="dl-btn-win" onclick="startDownload('win')">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 0h7.5v7.5H0zm8.5 0H16v7.5H8.5zM0 8.5h7.5V16H0zm8.5 0H16V16H8.5z"/></svg>
+        Windows 版を無料ダウンロード
       </button>
-      <p class="dl-note">Windows 10 / 11 (64-bit) 対応 &nbsp;·&nbsp; <a href="#" style="color:var(--muted)">macOS 版はこちら</a></p>
+      <button class="dl-btn-mac" onclick="openModal('mac-modal')">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854s-.228-.543-1.286-.988c-1.06-.445-2.03.167-2.803.533-.772.367-1.613.593-1.613.593s-.43-.082-1.03-.23c-.6-.148-1.5-.3-2.3-.094-.797.206-2.354 1.226-2.354 3.633 0 2.406 1.948 6.09 3.063 6.09.95 0 1.422-.675 2.538-.675s1.46.675 2.538.675c1.115 0 2.99-3.25 3.145-3.908.155-.66-.337-.93-.483-1.273z"/></svg>
+        macOS 版をダウンロード
+      </button>
+      <p class="dl-note">
+        <a onclick="openModal('privacy-modal')">プライバシーポリシー</a> &nbsp;·&nbsp;
+        <a onclick="openModal('tos-modal')">利用規約</a> &nbsp;·&nbsp;
+        <a onclick="openModal('changelog-modal')">更新履歴</a>
+      </p>
     </div>
-
     <div class="trust-row">
       <div class="trust-item">
-        <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="square"><path d="M3 8l3.5 3.5L13 5"/></svg>
-        ウイルス検査済み
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
+        広告なし・追跡なし
       </div>
       <div class="trust-item">
-        <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="square"><path d="M3 8l3.5 3.5L13 5"/></svg>
-        コード署名あり
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
+        更新前に自動バックアップ
       </div>
       <div class="trust-item">
-        <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="square"><path d="M3 8l3.5 3.5L13 5"/></svg>
-        30日間無料トライアル
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
+        500以上のゲームに対応
       </div>
     </div>
   </div>
 
-  <!-- APP MOCKUP -->
+  <!-- MOCKUP -->
   <div class="hero-right">
     <div class="mockup">
-      <!-- window chrome -->
       <div class="mock-chrome">
         <div class="mock-chrome-btns">
           <div class="mock-cb close"></div>
           <div class="mock-cb min"></div>
           <div class="mock-cb max"></div>
         </div>
-        <div class="mock-title">NexaSync — Workspace / Documents</div>
+        <div class="mock-wintitle">ModSync 1.8.2</div>
+        <div class="mock-badge">3件の更新あり</div>
       </div>
 
       <div class="mock-body">
         <!-- sidebar -->
         <div class="mock-sidebar">
-          <div class="mock-sb-header">ワークスペース</div>
+          <div class="mock-sb-section">ゲーム</div>
           <div class="mock-sb-item active">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="2" y="3" width="12" height="10"/><path d="M2 6h12"/></svg>
-            すべてのファイル
-            <span class="mock-sb-badge">3</span>
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
+            Skyrim SE
+            <span class="mock-sb-count red">3</span>
           </div>
           <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-            Documents
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
+            Cyberpunk 2077
+            <span class="mock-sb-count teal">✓</span>
           </div>
           <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-            Projects
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
+            Minecraft
+            <span class="mock-sb-count teal">✓</span>
           </div>
           <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-            Backups
-          </div>
-          <div class="mock-sb-header" style="margin-top:auto;border-top:1px solid var(--border)">デバイス</div>
-          <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="1" y="3" width="14" height="10"/><path d="M5 13h6"/></svg>
-            DESKTOP-K7F2
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
+            Baldur's Gate 3
+            <span class="mock-sb-count muted">—</span>
           </div>
           <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="4" y="1" width="8" height="14"/></svg>
-            iPhone 15
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
+            Stardew Valley
+            <span class="mock-sb-count muted">—</span>
+          </div>
+          <div class="mock-sb-section" style="margin-top:4px">管理</div>
+          <div class="mock-sb-item">
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><path d="M7 1v9M3 6l4 4 4-4"/><path d="M1 12h12"/></svg>
+            バックアップ
+          </div>
+          <div class="mock-sb-item">
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg>
+            更新履歴
+          </div>
+          <div class="mock-sb-item">
+            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M7 4v2M7 9v.5"/></svg>
+            競合チェック
           </div>
         </div>
 
         <!-- main -->
-        <div class="mock-main">
-          <div class="mock-toolbar">
-            <button class="mock-tb-btn primary">
-              <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M8 2v12M2 8h12"/></svg>
-              同期
-            </button>
-            <button class="mock-tb-btn">
-              <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-              フォルダ追加
-            </button>
-            <button class="mock-tb-btn">
-              <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 1"/></svg>
-              履歴
-            </button>
-            <input class="mock-search" type="text" value="ファイルを検索..." readonly>
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+          <!-- game tabs -->
+          <div class="mock-game-tabs">
+            <div class="mock-tab active">
+              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M2 8l3.5 3.5L12 4"/></svg>
+              すべて (14)
+            </div>
+            <div class="mock-tab">更新あり (3)</div>
+            <div class="mock-tab">有効 (12)</div>
+            <div class="mock-tab">無効 (2)</div>
           </div>
 
+          <!-- toolbar -->
+          <div class="mock-toolbar">
+            <button class="mock-tb-btn primary">
+              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M7 1v8M3 5l4 4 4-4"/></svg>
+              3件を更新
+            </button>
+            <button class="mock-tb-btn">
+              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M5 7l2 2 2-2"/></svg>
+              スキャン
+            </button>
+            <button class="mock-tb-btn warn">
+              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M7 2v5M7 9v.5"/></svg>
+              競合: 1件
+            </button>
+            <input class="mock-search" type="text" value="Modを検索..." readonly>
+          </div>
+
+          <!-- table -->
           <div class="mock-table">
             <div class="mock-th">
-              <span>名前</span>
-              <span>更新日時</span>
-              <span>ステータス</span>
-              <span>サイズ</span>
+              <div></div>
+              <div>Mod名</div>
+              <div>現在</div>
+              <div>最新</div>
+              <div>ソース</div>
+              <div>状態</div>
             </div>
-            <div class="mock-row selected">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="square"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg>
-                Q4_report_final.pdf
-              </div>
-              <span>12:34</span>
-              <div class="mock-status"><div class="mock-dot syncing"></div>同期中</div>
-              <span>4.2 MB</span>
+
+            <div class="mock-row update">
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>SKSE64</span><span class="mock-tag update">更新</span></div>
+              <div class="mock-ver">2.2.5</div>
+              <div class="mock-ver new">2.2.6</div>
+              <div class="mock-src">Nexus</div>
+              <div class="mock-prog"><div class="mock-prog-bar"><div class="mock-prog-fill" style="width:62%"></div></div></div>
             </div>
-            <div class="mock-row">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-                design_assets/
-              </div>
-              <span>昨日</span>
-              <div class="mock-status"><div class="mock-dot synced"></div>完了</div>
-              <span>218 MB</span>
+            <div class="mock-row update">
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>SkyUI</span><span class="mock-tag update">更新</span></div>
+              <div class="mock-ver">5.2.1</div>
+              <div class="mock-ver new">5.2.3</div>
+              <div class="mock-src">Nexus</div>
+              <div style="font-size:10px;color:var(--muted)">待機中</div>
             </div>
-            <div class="mock-row">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="square"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg>
-                meeting_notes.docx
-              </div>
-              <span>月曜日</span>
-              <div class="mock-status"><div class="mock-dot synced"></div>完了</div>
-              <span>84 KB</span>
-            </div>
-            <div class="mock-row">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="square"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg>
-                server_backup_20251203.tar.gz
-              </div>
-              <span>先週</span>
-              <div class="mock-status"><div class="mock-dot pending"></div>待機中</div>
-              <span>1.7 GB</span>
+            <div class="mock-row update">
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>ENBSeries</span><span class="mock-tag update">更新</span></div>
+              <div class="mock-ver">0.493</div>
+              <div class="mock-ver new">0.497</div>
+              <div class="mock-src">GitHub</div>
+              <div style="font-size:10px;color:var(--muted)">待機中</div>
             </div>
             <div class="mock-row">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="square"><path d="M2 4h5l2 2h5v8H2z"/></svg>
-                src/
-              </div>
-              <span>先週</span>
-              <div class="mock-status"><div class="mock-dot synced"></div>完了</div>
-              <span>52 MB</span>
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>Unofficial Skyrim SE Patch</span></div>
+              <div class="mock-ver">4.3.0</div>
+              <div class="mock-ver" style="color:var(--muted)">—</div>
+              <div class="mock-src">Nexus</div>
+              <div><span class="mock-tag ok">最新</span></div>
+            </div>
+            <div class="mock-row error">
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>Alternate Start</span><span class="mock-tag error">競合</span></div>
+              <div class="mock-ver">4.1.7</div>
+              <div class="mock-ver" style="color:var(--muted)">—</div>
+              <div class="mock-src">Nexus</div>
+              <div><span class="mock-tag error">要確認</span></div>
             </div>
             <div class="mock-row">
-              <div class="mock-fname">
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="square"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg>
-                archive_2024.zip
-              </div>
-              <span>2ヶ月前</span>
-              <div class="mock-status"><div class="mock-dot synced"></div>完了</div>
-              <span>9.1 GB</span>
+              <div class="mock-chk on"></div>
+              <div class="mock-mod-name"><span>Immersive Armors</span></div>
+              <div class="mock-ver">8.1</div>
+              <div class="mock-ver" style="color:var(--muted)">—</div>
+              <div class="mock-src">Nexus</div>
+              <div><span class="mock-tag ok">最新</span></div>
+            </div>
+            <div class="mock-row">
+              <div class="mock-chk"></div>
+              <div class="mock-mod-name"><span style="opacity:.5">Frostfall</span></div>
+              <div class="mock-ver" style="opacity:.5">3.4.0</div>
+              <div class="mock-ver" style="color:var(--muted)">—</div>
+              <div class="mock-src" style="opacity:.5">Nexus</div>
+              <div><span class="mock-tag manual">無効</span></div>
             </div>
           </div>
 
           <div class="mock-statusbar">
-            <span><span class="mock-sb-led"></span>接続済み</span>
-            <span>6 アイテム</span>
-            <span style="margin-left:auto;font-family:var(--mono)">転送中: 4.2 MB/s</span>
+            <span><span class="mock-led green"></span>スキャン完了</span>
+            <span>14 Mods</span>
+            <span style="color:var(--accent)">3件更新可能</span>
+            <span style="margin-left:auto">最終確認: 2分前</span>
           </div>
         </div>
       </div>
@@ -610,178 +528,358 @@
 </section>
 
 <!-- STATS -->
-<div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<div class="stats-outer">
   <div class="stats-wrap">
-    <div class="stat"><div class="stat-num">2.4M+</div><div class="stat-label">アクティブユーザー</div></div>
-    <div class="stat"><div class="stat-num">99.97%</div><div class="stat-label">アップタイム</div></div>
-    <div class="stat"><div class="stat-num">18 PB</div><div class="stat-label">同期済みデータ</div></div>
-    <div class="stat"><div class="stat-num">150+</div><div class="stat-label">対応プラットフォーム</div></div>
+    <div class="stat"><div class="stat-num">500+</div><div class="stat-label">対応ゲーム数</div></div>
+    <div class="stat"><div class="stat-num">3,200万+</div><div class="stat-label">自動更新されたMod</div></div>
+    <div class="stat"><div class="stat-num">98.4%</div><div class="stat-label">更新成功率</div></div>
+    <div class="stat"><div class="stat-num">4.8 / 5</div><div class="stat-label">ユーザー評価</div></div>
   </div>
 </div>
 
 <!-- FEATURES -->
-<section class="section">
+<section class="section" id="features">
   <div class="section-label">機能</div>
-  <div class="section-title">プロ向けの同期エンジン</div>
+  <div class="section-title">Mod管理のすべてを自動化する</div>
+  <div class="section-sub">インストールして5分でスキャン完了。あとはModSyncが自動でやります。</div>
   <div class="features">
     <div class="feature">
-      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M4 16h6l4-8 6 16 4-10 4 2"/></svg>
-      <div class="feat-title">デルタ転送エンジン</div>
-      <div class="feat-desc">変更差分のみを転送し、帯域幅を最大94%削減。大規模ファイルの同期が数秒で完了します。</div>
+      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><circle cx="12" cy="12" r="7"/><path d="M17 17l7 7"/><path d="M9 12h6M12 9v6"/></svg>
+      <div class="feat-title">自動Mod検出</div>
+      <div class="feat-desc">ゲームのインストールフォルダをスキャンし、導入済みModを自動で一覧化。Nexus Mods・CurseForge・GitHub Release に対応し、出所不明のローカルModも識別します。</div>
     </div>
     <div class="feature">
-      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><rect x="6" y="14" width="20" height="14"/><path d="M10 14v-4a6 6 0 0112 0v4"/></svg>
-      <div class="feat-title">エンドツーエンド暗号化</div>
-      <div class="feat-desc">AES-256-GCM で転送中・保存中のデータを保護。ゼロ知識アーキテクチャで第三者はアクセス不可。</div>
+      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M16 4v16M8 12l8 8 8-8"/><path d="M4 26h24"/></svg>
+      <div class="feat-title">一括アップデート</div>
+      <div class="feat-desc">更新可能なModを一覧表示し、ワンクリックで全件更新。個別に選んで更新することも可能です。スケジュール設定でゲーム起動前の自動更新にも対応します。</div>
     </div>
     <div class="feature">
-      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><circle cx="16" cy="16" r="10"/><path d="M6 16h20M16 6a14 14 0 010 20M16 6a14 14 0 000 20"/></svg>
-      <div class="feat-title">クロスプラットフォーム</div>
-      <div class="feat-desc">Windows・macOS・Linux・iOS・Android をシームレスに接続。REST API でカスタム統合も可能。</div>
-    </div>
-    <div class="feature">
-      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M4 28V10l12-6 12 6v18"/><path d="M12 28v-8h8v8"/></svg>
-      <div class="feat-title">バージョン管理 (180日)</div>
-      <div class="feat-desc">すべてのファイルの変更履歴を最大180日保持。誤削除・ランサムウェアからの復元が即時に可能。</div>
-    </div>
-    <div class="feature">
-      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="6" width="24" height="20"/><path d="M4 12h24M10 6v6M22 6v6"/></svg>
-      <div class="feat-title">管理コンソール</div>
-      <div class="feat-desc">チーム全体の同期ステータス・転送量・アクティビティを一元管理。SAML/SSO 対応。</div>
+      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M6 26V10l10-6 10 6v16"/><path d="M12 26v-8h8v8"/></svg>
+      <div class="feat-title">更新前自動バックアップ</div>
+      <div class="feat-desc">更新を適用する前に、現在のMod構成を自動でバックアップ。問題が起きたら、ワンクリックで更新前の状態に完全ロールバックできます。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M8 8l16 16M24 8L8 24"/><circle cx="16" cy="16" r="12"/></svg>
-      <div class="feat-title">自動競合解決</div>
-      <div class="feat-desc">独自の CRDT アルゴリズムにより、オフライン編集の衝突を自動マージ。手動解決がほぼゼロに。</div>
+      <div class="feat-title">競合チェック</div>
+      <div class="feat-desc">同じファイルを書き換えるModを自動検出し、競合の可能性を警告。ロードオーダーの問題も提案付きで表示するので、何が原因かすぐにわかります。</div>
+    </div>
+    <div class="feature">
+      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><circle cx="16" cy="16" r="12"/><path d="M16 10v6l4 2"/></svg>
+      <div class="feat-title">スケジュール更新</div>
+      <div class="feat-desc">「毎朝6時」「ゲーム起動5分前」など、好きなタイミングでの自動更新を設定可能。PC がアイドル中だけ動かすオプション付き。</div>
+    </div>
+    <div class="feature">
+      <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="8" width="24" height="16"/><path d="M4 13h24M10 8V5h12v3"/></svg>
+      <div class="feat-title">プロファイル管理</div>
+      <div class="feat-desc">「バニラ」「重量Modあり」「軽量」など複数のMod構成をプロファイルとして保存。用途に合わせてワンクリックで切り替えられます。</div>
     </div>
   </div>
 </section>
 
-<!-- CHANGELOG -->
-<section class="section">
-  <div class="section-label">更新履歴</div>
-  <div class="section-title">最新リリースノート</div>
-  <div class="changelog">
-    <div class="cl-entry">
-      <span class="cl-ver">v4.2.1</span>
-      <span class="cl-text"><strong>バグ修正:</strong> macOS 15.1 でのファイル監視API クラッシュを修正。Selective Sync のフィルター除外が正しく保存されない問題を解消。</span>
+<!-- COMPAT -->
+<section class="section" id="compat">
+  <div class="section-label">対応ゲーム</div>
+  <div class="section-title">主要対応タイトル（一部）</div>
+  <div class="section-sub">対応ゲームは毎月追加されます。リクエストは<a onclick="openModal('support-modal')" style="color:var(--accent);cursor:pointer">こちら</a>から。</div>
+  <div class="compat-grid">
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Skyrim Special Edition</div><div class="compat-tag">Nexus / GitHub · SKSE対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Minecraft (Java)</div><div class="compat-tag">CurseForge / Modrinth</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Cyberpunk 2077</div><div class="compat-tag">Nexus / GitHub</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Baldur's Gate 3</div><div class="compat-tag">Nexus / BG3 Mod Manager</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Stardew Valley</div><div class="compat-dot full"></div><div><div class="compat-name">Stardew Valley</div><div class="compat-tag">Nexus / SMAPI対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Fallout 4</div><div class="compat-tag">Nexus / F4SE対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">The Witcher 3</div><div class="compat-tag">Nexus</div></div></div>
+    <div class="compat-item"><div class="compat-dot part"></div><div><div class="compat-name">RimWorld</div><div class="compat-tag">Steam Workshop / Nexus</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Monster Hunter World</div><div class="compat-tag">Nexus</div></div></div>
+    <div class="compat-item"><div class="compat-dot part"></div><div><div class="compat-name">Valheim</div><div class="compat-tag">Nexus / Thunderstore</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Palworld</div><div class="compat-tag">Nexus</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">その他 500+ タイトル</div><div class="compat-tag">汎用フォルダスキャン対応</div></div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-label">価格</div>
+  <div class="section-title">完全無料で始められます</div>
+  <div class="section-sub">基本機能はすべて無料。ヘビーユーザー向けにProプランも用意しています。</div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Free</div>
+      <div class="price-amount">¥0 <span>/ 永久</span></div>
+      <div class="price-desc">ほとんどのユーザーにはこれで十分です</div>
+      <div class="price-features">
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>自動Mod検出（無制限）</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>一括アップデート</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>競合チェック</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>バックアップ（3世代）</div>
+        <div class="price-feat disabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 3l10 10M13 3L3 13"/></svg>スケジュール更新</div>
+        <div class="price-feat disabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 3l10 10M13 3L3 13"/></svg>プロファイル管理（無制限）</div>
+      </div>
+      <button class="price-btn" onclick="startDownload('win')">無料で始める</button>
     </div>
-    <div class="cl-entry">
-      <span class="cl-ver">v4.2.0</span>
-      <span class="cl-text"><strong>新機能:</strong> ブロックレベル同期エンジン v2 導入。WebDAV エンドポイント追加。管理コンソールに転送帯域グラフを追加。</span>
+    <div class="price-card popular">
+      <div class="popular-badge">人気</div>
+      <div class="price-name">Pro</div>
+      <div class="price-amount">¥480 <span>/ 月</span></div>
+      <div class="price-desc">Modをがっつり使い込むゲーマー向け</div>
+      <div class="price-features">
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>Freeのすべての機能</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>スケジュール更新</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>プロファイル管理（無制限）</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>バックアップ（無制限世代）</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>優先サポート</div>
+      </div>
+      <button class="price-btn primary" onclick="openModal('pro-modal')">Pro を始める</button>
     </div>
-    <div class="cl-entry">
-      <span class="cl-ver">v4.1.5</span>
-      <span class="cl-text"><strong>改善:</strong> ARM64 (Apple Silicon) 上での転送速度が平均28%向上。ダークモード UI のコントラスト改善。</span>
-    </div>
-    <div class="cl-entry">
-      <span class="cl-ver">v4.0.0</span>
-      <span class="cl-text"><strong>メジャーアップデート:</strong> 新デルタエンジン、エンドツーエンド暗号化 GA、REST API v2 公開。</span>
+    <div class="price-card">
+      <div class="price-name">OSS / 寄付</div>
+      <div class="price-amount">GitHub <span>/ MIT</span></div>
+      <div class="price-desc">コードを読みたい・ビルドしたい方へ</div>
+      <div class="price-features">
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>完全なソースコード公開</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>MITライセンス</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>Issue / PR 歓迎</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>自前ビルド・改変可</div>
+        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>寄付で開発を支援</div>
+      </div>
+      <button class="price-btn" onclick="openModal('github-modal')">GitHub で見る</button>
     </div>
   </div>
 </section>
 
-<!-- SYSTEM REQUIREMENTS -->
-<section class="section">
-  <div class="section-label">動作環境</div>
-  <div class="section-title">システム要件</div>
-  <div class="req-grid">
-    <div class="req-card">
-      <div class="req-os">
-        <svg class="req-os-icon" viewBox="0 0 16 16" fill="var(--text)"><path d="M0 0h7.5v7.5H0zm8.5 0H16v7.5H8.5zM0 8.5h7.5V16H0zm8.5 0H16V16H8.5z"/></svg>
-        Windows
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-label">よくある質問</div>
+  <div class="section-title">FAQ</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">既存のMod管理ツール（Vortex / MO2）と何が違いますか？
+        <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="req-row"><span class="req-key">OS</span><span class="req-val">Windows 10 / 11 (64-bit)</span></div>
-      <div class="req-row"><span class="req-key">CPU</span><span class="req-val">x64 / 1.4 GHz+</span></div>
-      <div class="req-row"><span class="req-key">RAM</span><span class="req-val">4 GB 以上推奨</span></div>
-      <div class="req-row"><span class="req-key">ストレージ</span><span class="req-val">120 MB 以上</span></div>
-      <div class="req-row"><span class="req-key">.NET</span><span class="req-val">8.0 Runtime (同梱)</span></div>
+      <div class="faq-a">Vortex や MO2 はModのインストール・有効化・ロードオーダー管理が中心ですが、ModSync は「更新の検出と適用」に特化しています。既存ツールと併用できるよう設計されており、Vortex / MO2 が管理するフォルダをそのまま読み取って更新チェックを行います。ModSync に乗り換える必要はありません。</div>
     </div>
-    <div class="req-card">
-      <div class="req-os">
-        <svg class="req-os-icon" viewBox="0 0 16 16" fill="var(--text)"><path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43zm3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422.212-2.189 1.675-2.789 1.698-2.854s-.228-.543-1.286-.988c-1.06-.445-2.03.167-2.803.533-.772.367-1.613.593-1.613.593s-.43-.082-1.03-.23c-.6-.148-1.5-.3-2.3-.094-.797.206-2.354 1.226-2.354 3.633 0 2.406 1.948 6.09 3.063 6.09.95 0 1.422-.675 2.538-.675s1.46.675 2.538.675c1.115 0 2.99-3.25 3.145-3.908.155-.66-.337-.93-.483-1.273z"/></svg>
-        macOS
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">更新によってセーブデータが壊れることはありませんか？
+        <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="req-row"><span class="req-key">OS</span><span class="req-val">macOS 13 Ventura 以降</span></div>
-      <div class="req-row"><span class="req-key">CPU</span><span class="req-val">Apple Silicon / Intel</span></div>
-      <div class="req-row"><span class="req-key">RAM</span><span class="req-val">4 GB 以上推奨</span></div>
-      <div class="req-row"><span class="req-key">ストレージ</span><span class="req-val">95 MB 以上</span></div>
-      <div class="req-row"><span class="req-key">権限</span><span class="req-val">フルディスクアクセス</span></div>
+      <div class="faq-a">更新前に必ず現在のMod構成をバックアップします（デフォルトで有効）。万が一問題が起きた場合はロールバック機能で更新前の状態に戻せます。ただし、Modの更新によるセーブデータへの影響はMod自体の互換性に依存するため、大型Modの更新時はご自身でも事前に情報を確認することをお勧めします。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">NexusモーズのAPIキーが必要ですか？
+        <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
+      </div>
+      <div class="faq-a">Nexus Mods からの更新確認にはNexus ModsのAPIキーが必要です（無料アカウントで取得可能）。初回セットアップ時にModSyncが案内します。CurseForge・GitHub Release については追加のAPIキーは不要です。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Steam Workshopには対応していますか？
+        <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
+      </div>
+      <div class="faq-a">Steam Workshop はSteamクライアント自体が自動更新を行うため、ModSync では検出・表示のみ対応しています（更新の適用はSteamに任せる形）。Nexus Mods・CurseForge・GitHub から直接ダウンロードするタイプのModが主な対象です。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">自動更新でゲームが壊れた場合はどうすればいいですか？
+        <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
+      </div>
+      <div class="faq-a">ModSync → 更新履歴 から対象の更新を選び、「ロールバック」ボタンを押すだけで元の状態に戻ります。バックアップはデフォルトで3世代（Proは無制限）保持されます。万が一バックアップが見つからない場合はサポートまでご連絡ください。</div>
     </div>
   </div>
 </section>
 
 <footer>
-  <span>© 2025 NexaSync Technologies, Inc.</span>
-  <span>プライバシーポリシー &nbsp;·&nbsp; 利用規約 &nbsp;·&nbsp; セキュリティ</span>
+  <div class="footer-inner">
+    <span>© 2025 ModSync Project. MIT License.</span>
+    <div class="footer-links">
+      <a onclick="openModal('privacy-modal')">プライバシーポリシー</a>
+      <a onclick="openModal('tos-modal')">利用規約</a>
+      <a onclick="openModal('changelog-modal')">更新履歴</a>
+      <a onclick="openModal('support-modal')">サポート</a>
+      <a onclick="openModal('github-modal')">GitHub</a>
+    </div>
+  </div>
 </footer>
 
-<!-- MODAL -->
-<div class="overlay" id="overlay">
+<!-- ══ MODALS ══ -->
+
+<!-- DL PROGRESS -->
+<div class="overlay" id="dl-modal">
   <div class="modal">
-    <div id="dl-phase">
-      <div class="modal-title">ダウンロード中...</div>
-      <div class="modal-sub">NexaSync v4.2.1 を取得しています</div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span id="prog-text">接続中...</span>
-          <span id="prog-pct">0%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
-      </div>
-      <div class="progress-steps">
-        <div class="step" id="s1">
-          <svg class="step-icon" id="si1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>
-          サーバーに接続中
-        </div>
-        <div class="step" id="s2">
-          <svg class="step-icon" id="si2" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>
-          パッケージの整合性を確認中
-        </div>
-        <div class="step" id="s3">
-          <svg class="step-icon" id="si3" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>
-          署名を検証中
-        </div>
-        <div class="step" id="s4">
-          <svg class="step-icon" id="si4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>
-          パッケージをダウンロード中
-        </div>
-      </div>
+    <div class="modal-title" id="dl-title">ダウンロードを準備中...</div>
+    <div class="modal-sub" id="dl-sub">ModSync v1.8.2 を取得しています</div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="prog-text">接続中...</span><span id="prog-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    </div>
+    <div class="progress-steps">
+      <div class="step" id="s1"><svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>サーバーへ接続中</div>
+      <div class="step" id="s2"><svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>パッケージの整合性を確認中</div>
+      <div class="step" id="s3"><svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>コード署名を検証中</div>
+      <div class="step" id="s4"><svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>パッケージをダウンロード中</div>
     </div>
   </div>
 </div>
 
-<!-- rickroll iframe: preloaded hidden from page load, positioned off-screen -->
-<iframe
-  id="yt-frame"
-  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&rel=0&enablejsapi=1"
-  allow="autoplay; encrypted-media"
-  allowfullscreen
-  style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;"
-></iframe>
+<!-- macOS -->
+<div class="overlay" id="mac-modal" onclick="bgClose(event,'mac-modal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('mac-modal')">✕</button>
+    <div class="modal-title">macOS 版を選択</div>
+    <div class="modal-sub">お使いの Mac に合わせてください</div>
+    <div class="mac-options">
+      <button class="mac-opt" onclick="closeModal('mac-modal');startDownload('mac-arm')">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><rect x="8" y="10" width="16" height="12"/><path d="M12 10V8a4 4 0 018 0v2"/><path d="M8 22l-3 4h22l-3-4"/></svg>
+        <div><div class="mac-opt-title">Apple Silicon 版（推奨）</div><div class="mac-opt-desc">M1 / M2 / M3 / M4 · 38.4 MB</div></div>
+      </button>
+      <button class="mac-opt" onclick="closeModal('mac-modal');startDownload('mac-intel')">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="square"><rect x="8" y="10" width="16" height="12"/><path d="M12 10V8a4 4 0 018 0v2"/><path d="M8 22l-3 4h22l-3-4"/></svg>
+        <div><div class="mac-opt-title">Intel 版</div><div class="mac-opt-desc">Intel Core i5 / i7 · 41.2 MB</div></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Pro -->
+<div class="overlay" id="pro-modal" onclick="bgClose(event,'pro-modal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('pro-modal')">✕</button>
+    <div class="modal-title">Pro プランに申し込む</div>
+    <div class="modal-sub">14日間の無料トライアルからどうぞ。クレジットカード不要。</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;text-align:left;margin-bottom:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-family:var(--mono)">メールアドレスを入力</div>
+      <div style="border:1px solid var(--border2);padding:10px 12px;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:10px">your@email.com</div>
+      <button class="price-btn primary" style="width:100%" onclick="closeModal('pro-modal');startDownload('win')">無料トライアルを開始</button>
+    </div>
+    <p style="font-size:11px;color:var(--muted)">14日後に ¥480/月 に自動移行。いつでもキャンセル可能。</p>
+  </div>
+</div>
+
+<!-- GitHub -->
+<div class="overlay" id="github-modal" onclick="bgClose(event,'github-modal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('github-modal')">✕</button>
+    <div class="modal-title">GitHub で見る</div>
+    <div class="modal-sub">MITライセンスで公開中</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);padding:14px 16px;font-family:var(--mono);font-size:13px;color:var(--accent);text-align:left;margin-bottom:14px">github.com/modsync-app/modsync</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7">Star・Issue・PR はいつでも歓迎します。ビルド手順は <span style="font-family:var(--mono);color:var(--accent)">README.md</span> を参照してください。</p>
+  </div>
+</div>
+
+<!-- Privacy -->
+<div class="overlay" id="privacy-modal" onclick="bgClose(event,'privacy-modal')">
+  <div class="modal modal-text">
+    <button class="modal-close" onclick="closeModal('privacy-modal')">✕</button>
+    <h2>プライバシーポリシー</h2>
+    <div class="modal-date">最終更新: 2025年11月18日</div>
+    <h3>1. 収集する情報</h3>
+    <p>ModSync が収集する情報は以下に限られます。アカウント登録時のメールアドレス（Proプランのみ）、および設定で許可した場合の匿名化された利用統計（インストールMod数・更新回数など）のみです。ゲームデータ・セーブデータ・Modの内容を収集することはありません。</p>
+    <h3>2. Mod情報の取り扱い</h3>
+    <p>更新チェックのために Nexus Mods / CurseForge / GitHub の API を使用します。これらのAPIへのリクエストにはMod IDと現在のバージョン番号のみが含まれます。ファイルの内容や個人情報は送信されません。</p>
+    <h3>3. ローカルデータ</h3>
+    <p>スキャン結果・バックアップ・プロファイルはすべてローカルに保存されます。クラウドへのアップロードは行いません。アプリをアンインストールすれば、すべてのローカルデータを削除できます。</p>
+    <h3>4. お問い合わせ</h3>
+    <p>privacy@modsync.app までご連絡ください。</p>
+  </div>
+</div>
+
+<!-- ToS -->
+<div class="overlay" id="tos-modal" onclick="bgClose(event,'tos-modal')">
+  <div class="modal modal-text">
+    <button class="modal-close" onclick="closeModal('tos-modal')">✕</button>
+    <h2>利用規約</h2>
+    <div class="modal-date">最終更新: 2025年11月18日</div>
+    <h3>1. ライセンス</h3>
+    <p>ModSync は MIT ライセンスのオープンソースソフトウェアです。個人・商用を問わず自由に使用・改変・再配布できます。</p>
+    <h3>2. 免責事項</h3>
+    <p>Modの更新によるゲームデータやセーブデータへの影響について、ModSync は一切の責任を負いません。重要なデータは事前にバックアップを取ることを強く推奨します。</p>
+    <h3>3. 各ゲーム・Modの規約について</h3>
+    <p>ModSync は各Modの利用規約に従って更新を行います。Modの再配布・改変を行う場合は各Mod作者の規約を遵守してください。</p>
+    <h3>4. Proプランのサブスクリプション</h3>
+    <p>Proプランは月額課金です。キャンセルはいつでも可能で、次回更新日まで機能を利用できます。</p>
+  </div>
+</div>
+
+<!-- Changelog -->
+<div class="overlay" id="changelog-modal" onclick="bgClose(event,'changelog-modal')">
+  <div class="modal modal-text">
+    <button class="modal-close" onclick="closeModal('changelog-modal')">✕</button>
+    <h2>更新履歴</h2>
+    <div class="modal-date">ModSync Release Notes</div>
+    <h3>v1.8.2 — 2025.12.01</h3>
+    <p><strong style="color:var(--text)">新機能:</strong> Thunderstore（Valheim / Lethal Company等）に対応。ロールバック時に競合していたModも同時に復元するよう改善。</p>
+    <p><strong style="color:var(--text)">修正:</strong> Nexus Mods API のレート制限エラーを適切に処理するよう修正。Skyrim AE版でSKSEバージョンが正しく検出されない問題を修正。</p>
+    <h3>v1.8.0 — 2025.10.14</h3>
+    <p><strong style="color:var(--text)">新機能:</strong> プロファイル管理機能を追加。スケジュール更新にアイドル検出を追加（Pro）。競合チェックの精度を大幅改善。</p>
+    <h3>v1.7.1 — 2025.08.22</h3>
+    <p><strong style="color:var(--text)">追加:</strong> Baldur's Gate 3 / Palworld に対応。バックアップの保持世代数を設定で変更可能に。</p>
+    <h3>v1.6.0 — 2025.06.05</h3>
+    <p><strong style="color:var(--text)">メジャー:</strong> CurseForge API に対応。UIを全面刷新。macOS 版をリリース。</p>
+  </div>
+</div>
+
+<!-- Support -->
+<div class="overlay" id="support-modal" onclick="bgClose(event,'support-modal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('support-modal')">✕</button>
+    <div class="modal-title">サポート</div>
+    <div class="modal-sub" style="text-align:left;margin-bottom:16px">お困りの場合はこちらからご連絡ください。</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="mac-opt" onclick="closeModal('support-modal')">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="square"><path d="M4 6h20v14H4z"/><path d="M4 6l10 9 10-9"/></svg>
+        <div><div class="mac-opt-title">メールサポート</div><div class="mac-opt-desc">support@modsync.app（1〜2営業日）</div></div>
+      </button>
+      <button class="mac-opt" onclick="closeModal('support-modal')">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="square"><path d="M4 20V8a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4z"/></svg>
+        <div><div class="mac-opt-title">Discord コミュニティ</div><div class="mac-opt-desc">discord.gg/modsync（即レスが多いです）</div></div>
+      </button>
+      <button class="mac-opt" onclick="openModal('github-modal')">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="var(--text)"><path d="M14 0C6.268 0 0 6.268 0 14c0 6.186 4.01 11.434 9.573 13.283.7.128.956-.301.956-.67v-2.605c-3.893.847-4.705-1.651-4.705-1.651-.635-1.617-1.55-2.047-1.55-2.047-1.27-.868.097-.85.097-.85 1.405.099 2.144 1.441 2.144 1.441 1.25 2.139 3.274 1.521 4.073 1.163.126-.904.488-1.521.888-1.87-3.104-.356-6.369-1.552-6.369-6.91 0-1.527.546-2.775 1.44-3.754-.144-.354-.624-1.776.136-3.703 0 0 1.175-.376 3.85 1.435A13.39 13.39 0 0114 6.768c1.19.006 2.387.161 3.506.472 2.67-1.811 3.843-1.435 3.843-1.435.762 1.927.282 3.349.138 3.703.898.979 1.438 2.227 1.438 3.754 0 5.372-3.27 6.55-6.384 6.898.502.434.96 1.287.96 2.593v3.842c0 .372.252.804.964.668C23.995 25.429 28 20.185 28 14c0-7.732-6.268-14-14-14z"/></svg>
+        <div><div class="mac-opt-title">GitHub Issues</div><div class="mac-opt-desc">バグ報告・機能リクエスト（推奨）</div></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Rickroll preload -->
+<iframe id="yt-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;"></iframe>
 
 <script>
-  const DONE_SVG   = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="square"><path d="M2 8l4.5 4.5L14 4"/></svg>`;
-  const ACTIVE_SVG = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><rect x="2" y="2" width="12" height="12"/><path d="M5 8h6"/></svg>`;
+  const DONE_SVG   = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l4.5 4.5L14 4"/></svg>`;
+  const ACTIVE_SVG = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-linecap="square"><rect x="2" y="2" width="12" height="12"/><path d="M5 8h6"/></svg>`;
 
-  function startDownload() {
-    document.getElementById('overlay').classList.add('active');
-    runProgress();
+  const dlConfigs = {
+    win:        { title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (Windows 64-bit) を取得しています', size:'36.8 MB' },
+    'mac-arm':  { title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (macOS Apple Silicon) を取得しています', size:'38.4 MB' },
+    'mac-intel':{ title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (macOS Intel) を取得しています', size:'41.2 MB' },
+  };
+
+  function startDownload(type) {
+    const cfg = dlConfigs[type] || dlConfigs.win;
+    document.getElementById('dl-title').textContent = cfg.title;
+    document.getElementById('dl-sub').textContent   = cfg.sub;
+    document.getElementById('prog-fill').style.width = '0%';
+    document.getElementById('prog-pct').textContent  = '0%';
+    document.getElementById('prog-text').textContent = '接続中...';
+    ['s1','s2','s3','s4'].forEach(id => {
+      const el = document.getElementById(id);
+      el.className = 'step';
+      const txt = el.textContent.trim();
+      el.innerHTML = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>${txt}`;
+    });
+    openModal('dl-modal');
+    runProgress(cfg.size);
   }
 
-  function runProgress() {
-    const fill = document.getElementById('prog-fill');
-    const pct  = document.getElementById('prog-pct');
-    const txt  = document.getElementById('prog-text');
+  function runProgress(size) {
+    const fill  = document.getElementById('prog-fill');
+    const pct   = document.getElementById('prog-pct');
+    const txt   = document.getElementById('prog-text');
     const steps = [
-      { el:'s1', label:'サーバーに接続中',             at:0,  done:18  },
+      { el:'s1', label:'サーバーへ接続中',              at:0,  done:18  },
       { el:'s2', label:'パッケージの整合性を確認中',     at:18, done:42  },
-      { el:'s3', label:'署名を検証中',                  at:42, done:60  },
-      { el:'s4', label:'パッケージをダウンロード中...',  at:60, done:100 },
+      { el:'s3', label:'コード署名を検証中',              at:42, done:60  },
+      { el:'s4', label:`パッケージをダウンロード中 (${size})`, at:60, done:100 },
     ];
     let start = null;
-    const duration = 4400;
-
+    const duration = 4600;
     function frame(ts) {
       if (!start) start = ts;
       const p = Math.min((ts - start) / duration, 1);
@@ -793,10 +891,10 @@
         const el = document.getElementById(s.el);
         if (v >= s.done) {
           el.className = 'step done';
-          el.innerHTML = DONE_SVG + ' ' + s.label;
+          el.innerHTML = DONE_SVG + s.label;
         } else if (v >= s.at) {
           el.className = 'step active';
-          el.innerHTML = ACTIVE_SVG + ' ' + s.label;
+          el.innerHTML = ACTIVE_SVG + s.label;
           txt.textContent = s.label;
         }
       });
@@ -807,37 +905,27 @@
   }
 
   function prepareRickroll() {
-    // unmute the already-playing hidden iframe
-    const frame = document.getElementById('yt-frame');
-    frame.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
-
-    // 0.5s later: nuke everything, show iframe fullscreen
+    document.getElementById('yt-frame').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
     setTimeout(showRickroll, 500);
   }
 
   function showRickroll() {
     const frame = document.getElementById('yt-frame');
-
-    // detach iframe from DOM temporarily so we don't lose it
     document.body.removeChild(frame);
-
-    // nuke entire page content
     document.head.innerHTML = '';
     document.body.innerHTML = '';
-
-    // reset styles on html/body
     const s = document.createElement('style');
-    s.textContent = `
-      *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-      html, body { width:100%; height:100%; background:#000; overflow:hidden; }
-      iframe { position:fixed; inset:0; width:100%; height:100%; border:none; display:block; }
-    `;
+    s.textContent = `*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;background:#000;overflow:hidden}iframe{position:fixed;inset:0;width:100%;height:100%;border:none;display:block}`;
     document.head.appendChild(s);
-
-    // re-attach iframe fullscreen
     frame.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;';
     document.body.appendChild(frame);
   }
+
+  function openModal(id)  { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function bgClose(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+  function scrollToSection(id) { document.getElementById(id)?.scrollIntoView({ behavior:'smooth' }); }
+  function toggleFaq(el)  { el.parentElement.classList.toggle('open'); }
 </script>
 </body>
 </html>
