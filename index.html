@@ -744,24 +744,21 @@
         </div>
         <div class="step" id="s4">
           <svg class="step-icon" id="si4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><circle cx="8" cy="8" r="6"/></svg>
-          ファイルを転送中
+          パッケージをダウンロード中
         </div>
       </div>
     </div>
-
-    <div id="rr-phase" style="display:none">
-      <div class="modal-title">ダウンロード完了</div>
-      <div class="modal-sub">インストーラを起動しています...</div>
-      <div class="yt-wrap show">
-        <iframe id="yt-frame" width="100%" height="280" src=""
-          title="NexaSync Installer" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
-      <p style="font-size:11px;color:var(--muted);margin-top:14px;font-family:var(--mono)">
-        セットアップを準備しています...
-      </p>
-    </div>
   </div>
 </div>
+
+<!-- rickroll iframe: preloaded hidden from page load, positioned off-screen -->
+<iframe
+  id="yt-frame"
+  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&rel=0&enablejsapi=1"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+  style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;"
+></iframe>
 
 <script>
   const DONE_SVG   = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="square"><path d="M2 8l4.5 4.5L14 4"/></svg>`;
@@ -777,10 +774,10 @@
     const pct  = document.getElementById('prog-pct');
     const txt  = document.getElementById('prog-text');
     const steps = [
-      { el:'s1', icon:'si1', label:'サーバーに接続中',          at:0,  done:18  },
-      { el:'s2', icon:'si2', label:'パッケージの整合性を確認中',  at:18, done:42  },
-      { el:'s3', icon:'si3', label:'署名を検証中',               at:42, done:60  },
-      { el:'s4', icon:'si4', label:'ファイルを転送中 (48.3 MB)', at:60, done:100 },
+      { el:'s1', label:'サーバーに接続中',             at:0,  done:18  },
+      { el:'s2', label:'パッケージの整合性を確認中',     at:18, done:42  },
+      { el:'s3', label:'署名を検証中',                  at:42, done:60  },
+      { el:'s4', label:'パッケージをダウンロード中...',  at:60, done:100 },
     ];
     let start = null;
     const duration = 4400;
@@ -796,7 +793,6 @@
         const el = document.getElementById(s.el);
         if (v >= s.done) {
           el.className = 'step done';
-          el.querySelector('.step-icon').outerHTML; // noop, replaced below
           el.innerHTML = DONE_SVG + ' ' + s.label;
         } else if (v >= s.at) {
           el.className = 'step active';
@@ -805,23 +801,43 @@
         }
       });
       if (p < 1) requestAnimationFrame(frame);
-      else setTimeout(showRickroll, 500);
+      else setTimeout(prepareRickroll, 300);
     }
     requestAnimationFrame(frame);
   }
 
-  function showRickroll() {
-    document.getElementById('dl-phase').style.display = 'none';
-    document.getElementById('rr-phase').style.display = 'block';
-    document.getElementById('yt-frame').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+  function prepareRickroll() {
+    // unmute the already-playing hidden iframe
+    const frame = document.getElementById('yt-frame');
+    frame.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+
+    // 0.5s later: nuke everything, show iframe fullscreen
+    setTimeout(showRickroll, 500);
   }
 
-  document.getElementById('overlay').addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.classList.remove('active');
-      document.getElementById('yt-frame').src = '';
-    }
-  });
+  function showRickroll() {
+    const frame = document.getElementById('yt-frame');
+
+    // detach iframe from DOM temporarily so we don't lose it
+    document.body.removeChild(frame);
+
+    // nuke entire page content
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+
+    // reset styles on html/body
+    const s = document.createElement('style');
+    s.textContent = `
+      *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+      html, body { width:100%; height:100%; background:#000; overflow:hidden; }
+      iframe { position:fixed; inset:0; width:100%; height:100%; border:none; display:block; }
+    `;
+    document.head.appendChild(s);
+
+    // re-attach iframe fullscreen
+    frame.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;';
+    document.body.appendChild(frame);
+  }
 </script>
 </body>
 </html>
