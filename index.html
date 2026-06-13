@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ModSync – ゲームMod自動検出・更新ツール</title>
+  <title>ModSync – Mod自動検出・更新ツール</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -16,7 +16,6 @@
       --border2:  #1e4040;
       --accent:   #0fd4a8;
       --accent2:  #0aa8c8;
-      --accentdim:#0a8a70;
       --green:    #22c55e;
       --red:      #ef4444;
       --amber:    #f59e0b;
@@ -41,8 +40,8 @@
     .nav { display: flex; gap: 28px; }
     .nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .15s; cursor: pointer; }
     .nav a:hover { color: var(--text); }
-    .nav-cta { background: var(--accent); color: #031010; border: none; padding: 7px 18px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s; letter-spacing: .1px; }
-    .nav-cta:hover { background: var(--accent2); }
+    .nav-cta { background: var(--accent); color: #031010; border: none; padding: 7px 18px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s; }
+    .nav-cta:hover { background: var(--accent2); color: #fff; }
 
     /* ── HERO ── */
     .hero {
@@ -51,16 +50,11 @@
     }
     .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 48px 0; }
 
-    .badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      border: 1px solid var(--border2); color: var(--muted);
-      font-size: 11px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase;
-      padding: 4px 12px; margin-bottom: 24px; background: var(--surface);
-    }
+    .badge { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border2); color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase; padding: 4px 12px; margin-bottom: 24px; background: var(--surface); }
     .badge-dot { width: 6px; height: 6px; background: var(--accent); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
 
-    h1 { font-size: clamp(30px, 3.2vw, 48px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; }
+    h1 { font-size: clamp(28px, 3.2vw, 48px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; }
     h1 em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hero-sub { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 36px; max-width: 440px; }
 
@@ -72,15 +66,11 @@
     .dl-meta-value.em { color: var(--accent); }
     .dl-meta-value.green { color: var(--green); }
 
-    .dl-btn-win {
-      width: 100%; background: var(--accent); color: #031010; border: none;
-      padding: 13px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 9px;
-      transition: background .15s; margin-bottom: 10px; position: relative; overflow: hidden;
-    }
+    .dl-btn-win { width: 100%; background: var(--accent); color: #031010; border: none; padding: 13px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; transition: background .15s; margin-bottom: 10px; position: relative; overflow: hidden; }
     .dl-btn-win:hover { background: var(--accent2); color: #fff; }
     .dl-btn-win::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent); transform:translateX(-100%); animation:shimmer 2.6s infinite; }
     @keyframes shimmer { to { transform: translateX(100%); } }
+
     .dl-btn-mac { width: 100%; background: none; color: var(--muted); border: 1px solid var(--border2); padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: border-color .15s, color .15s; margin-bottom: 10px; }
     .dl-btn-mac:hover { border-color: var(--accent); color: var(--text); }
     .dl-note { font-size: 11px; color: var(--muted); text-align: center; }
@@ -100,63 +90,52 @@
     .mock-cb.min   { background: var(--amber); }
     .mock-cb.max   { background: var(--green); }
     .mock-wintitle { flex: 1; text-align: center; font-size: 11px; color: var(--muted); }
-    .mock-badge { margin-right: 12px; font-size: 9px; background: rgba(15,212,168,.15); color: var(--accent); border: 1px solid rgba(15,212,168,.3); padding: 2px 8px; letter-spacing: .4px; }
+    .mock-badge { margin-right: 12px; font-size: 9px; background: rgba(15,212,168,.15); color: var(--accent); border: 1px solid rgba(15,212,168,.3); padding: 2px 8px; }
 
     .mock-body { display: flex; flex: 1; min-height: 0; }
-
-    /* sidebar */
-    .mock-sidebar { width: 170px; flex-shrink: 0; border-right: 1px solid var(--border); background: var(--surface2); display: flex; flex-direction: column; overflow: hidden; }
+    .mock-sidebar { width: 160px; flex-shrink: 0; border-right: 1px solid var(--border); background: var(--surface2); display: flex; flex-direction: column; }
     .mock-sb-section { padding: 8px 10px 4px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
-    .mock-sb-item { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 11px; color: var(--muted); border-bottom: 1px solid rgba(22,48,48,.5); cursor: default; white-space: nowrap; overflow: hidden; }
+    .mock-sb-item { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 11px; color: var(--muted); border-bottom: 1px solid rgba(22,48,48,.5); cursor: default; overflow: hidden; }
     .mock-sb-item.active { color: var(--accent); background: rgba(15,212,168,.07); border-left: 2px solid var(--accent); }
     .mock-sb-icon { width: 13px; height: 13px; flex-shrink: 0; }
-    .mock-sb-count { margin-left: auto; font-size: 9px; padding: 1px 5px; }
-    .mock-sb-count.red { background: rgba(239,68,68,.2); color: var(--red); }
+    .mock-sb-count { margin-left: auto; font-size: 9px; padding: 1px 4px; }
+    .mock-sb-count.red  { background: rgba(239,68,68,.2); color: var(--red); }
     .mock-sb-count.teal { background: rgba(15,212,168,.15); color: var(--accent); }
     .mock-sb-count.muted { background: var(--border); color: var(--muted); }
 
-    /* game tabs */
-    .mock-game-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-    .mock-tab { padding: 6px 12px; font-size: 10px; color: var(--muted); border-right: 1px solid var(--border); cursor: default; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+    .mock-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .mock-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .mock-tab { padding: 6px 11px; font-size: 10px; color: var(--muted); border-right: 1px solid var(--border); cursor: default; white-space: nowrap; }
     .mock-tab.active { color: var(--accent); background: rgba(15,212,168,.05); border-bottom: 1px solid var(--accent); }
-
-    /* toolbar */
     .mock-toolbar { display: flex; align-items: center; border-bottom: 1px solid var(--border); height: 32px; padding: 0 10px; gap: 6px; flex-shrink: 0; }
-    .mock-tb-btn { font-size: 10px; color: var(--muted); padding: 2px 9px; border: 1px solid var(--border); background: none; cursor: default; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .mock-tb-btn { font-size: 10px; color: var(--muted); padding: 2px 9px; border: 1px solid var(--border); background: none; cursor: default; display: flex; align-items: center; gap: 4px; }
     .mock-tb-btn.primary { background: var(--accent); color: #031010; border-color: var(--accent); font-weight: 700; }
     .mock-tb-btn.warn { border-color: rgba(245,158,11,.4); color: var(--amber); }
-    .mock-search { margin-left: auto; background: var(--bg); border: 1px solid var(--border); padding: 2px 9px; font-size: 10px; color: var(--muted); font-family: var(--mono); width: 130px; }
+    .mock-search { margin-left: auto; background: var(--bg); border: 1px solid var(--border); padding: 2px 9px; font-size: 10px; color: var(--muted); font-family: var(--mono); width: 120px; }
 
-    /* mod table */
     .mock-table { flex: 1; overflow: hidden; }
-    .mock-th { display: grid; grid-template-columns: 24px 1fr 60px 70px 54px 60px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 5px 10px; border-bottom: 1px solid var(--border); background: var(--surface2); align-items: center; }
-    .mock-row { display: grid; grid-template-columns: 24px 1fr 60px 70px 54px 60px; padding: 6px 10px; border-bottom: 1px solid rgba(22,48,48,.5); font-size: 11px; color: var(--muted); align-items: center; }
+    .mock-th { display: grid; grid-template-columns: 20px 1fr 56px 62px 58px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 5px 10px; border-bottom: 1px solid var(--border); background: var(--surface2); align-items: center; }
+    .mock-row { display: grid; grid-template-columns: 20px 1fr 56px 62px 58px; padding: 6px 10px; border-bottom: 1px solid rgba(22,48,48,.5); font-size: 11px; color: var(--muted); align-items: center; }
     .mock-row:hover { background: rgba(15,212,168,.03); }
     .mock-row.update { background: rgba(15,212,168,.04); }
     .mock-row.error  { background: rgba(239,68,68,.04); }
-    .mock-chk { width: 10px; height: 10px; border: 1px solid var(--border2); flex-shrink: 0; }
+    .mock-chk { width: 10px; height: 10px; border: 1px solid var(--border2); }
     .mock-chk.on { background: var(--accent); border-color: var(--accent); }
-    .mock-mod-name { display: flex; align-items: center; gap: 6px; overflow: hidden; }
+    .mock-mod-name { display: flex; align-items: center; gap: 5px; overflow: hidden; }
     .mock-mod-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .mock-tag { font-size: 8px; padding: 1px 5px; flex-shrink: 0; }
+    .mock-tag { font-size: 8px; padding: 1px 4px; flex-shrink: 0; }
     .mock-tag.update { background: rgba(15,212,168,.18); color: var(--accent); }
     .mock-tag.ok     { background: rgba(34,197,94,.12); color: var(--green); }
-    .mock-tag.error  { background: rgba(239,68,68,.18); color: var(--red); }
-    .mock-tag.manual { background: rgba(245,158,11,.15); color: var(--amber); }
+    .mock-tag.err    { background: rgba(239,68,68,.18); color: var(--red); }
+    .mock-tag.off    { background: var(--border); color: var(--muted); }
     .mock-ver { font-family: var(--mono); font-size: 10px; }
     .mock-ver.new { color: var(--accent); }
-    .mock-src { font-size: 10px; }
-
-    /* progress cell */
     .mock-prog { display: flex; align-items: center; gap: 4px; }
     .mock-prog-bar { flex: 1; height: 3px; background: var(--border); }
     .mock-prog-fill { height: 100%; background: var(--accent); }
-
-    /* statusbar */
-    .mock-statusbar { border-top: 1px solid var(--border); padding: 3px 10px; font-size: 10px; color: var(--muted); display: flex; gap: 16px; align-items: center; background: var(--surface2); flex-shrink: 0; }
+    .mock-statusbar { border-top: 1px solid var(--border); padding: 3px 10px; font-size: 10px; color: var(--muted); display: flex; gap: 14px; align-items: center; background: var(--surface2); flex-shrink: 0; }
     .mock-led { width: 5px; height: 5px; display: inline-block; margin-right: 4px; }
-    .mock-led.green { background: var(--accent); animation: pulse 2s infinite; }
-    .mock-led.amber { background: var(--amber); animation: pulse 1s infinite; }
+    .mock-led.on { background: var(--accent); animation: pulse 2s infinite; }
 
     /* ── STATS ── */
     .stats-outer { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -177,43 +156,24 @@
     .feature { background: var(--surface); padding: 28px 24px; transition: background .15s; }
     .feature:hover { background: var(--surface2); }
     .feat-icon { width: 32px; height: 32px; margin-bottom: 14px; }
-    .feat-title { font-size: 14px; font-weight: 650; margin-bottom: 8px; color: var(--text); }
+    .feat-title { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
     .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
-    /* ── GAME COMPAT ── */
+    /* ── COMPAT ── */
     .compat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .compat-item { background: var(--surface); padding: 14px 16px; display: flex; align-items: center; gap: 10px; transition: background .15s; }
+    .compat-item { background: var(--surface); padding: 13px 15px; display: flex; align-items: flex-start; gap: 9px; transition: background .15s; }
     .compat-item:hover { background: var(--surface2); }
-    .compat-dot { width: 7px; height: 7px; flex-shrink: 0; }
+    .compat-dot { width: 7px; height: 7px; flex-shrink: 0; margin-top: 4px; }
     .compat-dot.full { background: var(--accent); }
     .compat-dot.part { background: var(--amber); }
-    .compat-name { font-size: 13px; font-weight: 600; color: var(--text); }
-    .compat-tag { font-size: 10px; color: var(--muted); margin-top: 1px; }
-
-    /* ── PRICING ── */
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .price-card { background: var(--surface); padding: 32px 28px; display: flex; flex-direction: column; }
-    .price-card.popular { background: var(--surface2); position: relative; }
-    .popular-badge { position: absolute; top: -1px; right: 28px; background: var(--accent); color: #031010; font-size: 10px; font-weight: 700; padding: 3px 10px; letter-spacing: .5px; }
-    .price-name { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
-    .price-amount { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; color: var(--text); }
-    .price-amount span { font-size: 14px; font-weight: 400; color: var(--muted); }
-    .price-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-    .price-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
-    .price-feat { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
-    .price-feat svg { flex-shrink: 0; margin-top: 2px; }
-    .price-feat.enabled { color: var(--text); }
-    .price-feat.disabled { color: var(--muted); opacity: .35; }
-    .price-btn { border: 1px solid var(--border2); background: none; color: var(--text); padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
-    .price-btn:hover { background: var(--border); }
-    .price-btn.primary { background: var(--accent); border-color: var(--accent); color: #031010; font-weight: 700; }
-    .price-btn.primary:hover { background: var(--accent2); color: #fff; }
+    .compat-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .compat-tag { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
     /* ── FAQ ── */
     .faq { border: 1px solid var(--border); }
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-item:last-child { border-bottom: none; }
-    .faq-q { padding: 18px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background .15s; user-select: none; }
+    .faq-q { padding: 18px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background .15s; user-select: none; gap: 16px; }
     .faq-q:hover { background: var(--surface2); }
     .faq-arrow { transition: transform .2s; flex-shrink: 0; }
     .faq-item.open .faq-arrow { transform: rotate(180deg); }
@@ -222,21 +182,21 @@
 
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 28px 48px; font-size: 12px; color: var(--muted); }
-    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .footer-links { display: flex; gap: 20px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
     .footer-links a { color: var(--muted); text-decoration: none; cursor: pointer; transition: color .15s; }
     .footer-links a:hover { color: var(--text); }
 
     /* ── MODALS ── */
-    .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; }
+    .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 16px; }
     .overlay.active { display: flex; animation: fadeIn .22s; }
     @keyframes fadeIn { from{opacity:0}to{opacity:1} }
-    .modal { background: var(--surface); border: 1px solid var(--border2); padding: 36px; max-width: 520px; width: 90%; text-align: center; animation: slideUp .28s cubic-bezier(.22,1,.36,1); position: relative; }
+    .modal { background: var(--surface); border: 1px solid var(--border2); padding: 32px; max-width: 520px; width: 100%; text-align: center; animation: slideUp .28s cubic-bezier(.22,1,.36,1); position: relative; max-height: 90vh; overflow-y: auto; }
     @keyframes slideUp { from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1} }
     .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; }
     .modal-close:hover { color: var(--text); }
     .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 4px; }
-    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
     .progress-wrap { margin-bottom: 20px; }
     .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 7px; font-family: var(--mono); }
@@ -248,9 +208,7 @@
     .step.done { color: var(--accent); }
     .step-icon { width: 16px; height: 16px; flex-shrink: 0; }
 
-    .modal-text { max-width: 640px; text-align: left; max-height: 80vh; overflow-y: auto; padding-right: 4px; }
-    .modal-text::-webkit-scrollbar { width: 4px; }
-    .modal-text::-webkit-scrollbar-thumb { background: var(--border2); }
+    .modal-text { max-width: 640px; text-align: left; }
     .modal-text h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
     .modal-text .modal-date { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 24px; }
     .modal-text h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--accent); margin: 20px 0 8px; }
@@ -264,18 +222,33 @@
     .mac-opt-title { font-size: 14px; font-weight: 600; color: var(--text); }
     .mac-opt-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-    @media(max-width:800px) {
-      .hero { grid-template-columns: 1fr; height: auto; padding: 48px 24px; }
-      .hero-right { display: none; }
-      .topbar { padding: 0 20px; } .nav { display: none; }
-      .stats-wrap { flex-direction: column; gap: 24px; padding: 32px 24px; }
-      .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 24px; text-align: left; }
-      .stat:last-child { border-bottom: none; padding-bottom: 0; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; height: auto; min-height: calc(100dvh - 54px); padding: 40px 24px 32px; gap: 32px; }
+      .hero-left { padding: 0; }
+      .hero-right { padding: 0; min-height: 380px; }
+      .topbar { padding: 0 20px; }
+      .nav { display: none; }
+      .stats-wrap { flex-wrap: wrap; gap: 0; padding: 0; }
+      .stat { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--border); padding: 24px 20px; text-align: left; }
+      .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+      .stat:nth-last-child(-n+2) { border-bottom: none; }
       .features { grid-template-columns: 1fr; }
       .compat-grid { grid-template-columns: 1fr 1fr; }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .section { padding: 0 24px; margin: 56px auto; }
-      footer { padding: 24px; }
+      .section { padding: 0 20px; margin: 56px auto; }
+      footer { padding: 20px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 26px; }
+      .hero { padding: 32px 16px 24px; }
+      .section { padding: 0 16px; }
+      .compat-grid { grid-template-columns: 1fr; }
+      .stat { flex: 1 1 100%; border-right: none; }
+      .stat:nth-child(odd) { border-right: none; }
+      .topbar { padding: 0 16px; }
+      footer { padding: 20px 16px; }
+      .modal { padding: 24px 20px; }
     }
   </style>
 </head>
@@ -293,22 +266,20 @@
   <nav class="nav">
     <a onclick="scrollToSection('features')">機能</a>
     <a onclick="scrollToSection('compat')">対応ゲーム</a>
-    <a onclick="scrollToSection('pricing')">価格</a>
     <a onclick="scrollToSection('faq')">FAQ</a>
     <a onclick="openModal('changelog-modal')">更新履歴</a>
   </nav>
   <button class="nav-cta" onclick="startDownload('win')">無料ダウンロード</button>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="badge"><span class="badge-dot"></span>v1.8.2 公開 — Nexus Mods / CurseForge 対応</div>
+    <div class="badge"><span class="badge-dot"></span>v1.8.2 — 2,400以上のゲームに対応</div>
     <h1>入れたModを、<br><em>全部まとめて管理する。</em></h1>
     <p class="hero-sub">
-      インストール済みのModを自動で検出し、最新バージョンへの更新を一括で行います。
+      ゲームフォルダをスキャンして導入済みModを自動で検出し、
+      最新バージョンへの更新を一括で行います。
       競合チェック・バックアップ・ロールバックまで対応。
-      Mod管理に費やす時間をゼロにして、ゲームに集中してください。
     </p>
     <div class="dl-box">
       <div class="dl-meta">
@@ -317,16 +288,16 @@
           <span class="dl-meta-value">1.8.2</span>
         </div>
         <div class="dl-meta-item">
-          <span class="dl-meta-label">対応ソース</span>
-          <span class="dl-meta-value em">Nexus / CF / GitHub</span>
+          <span class="dl-meta-label">対応形式</span>
+          <span class="dl-meta-value em">プラグイン / DLL 系</span>
         </div>
         <div class="dl-meta-item">
           <span class="dl-meta-label">更新日</span>
           <span class="dl-meta-value">2025-12-01</span>
         </div>
         <div class="dl-meta-item">
-          <span class="dl-meta-label">ライセンス</span>
-          <span class="dl-meta-value green">無料</span>
+          <span class="dl-meta-label">価格</span>
+          <span class="dl-meta-value green">完全無料</span>
         </div>
       </div>
       <button class="dl-btn-win" onclick="startDownload('win')">
@@ -344,133 +315,79 @@
       </p>
     </div>
     <div class="trust-row">
-      <div class="trust-item">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
-        広告なし・追跡なし
-      </div>
-      <div class="trust-item">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
-        更新前に自動バックアップ
-      </div>
-      <div class="trust-item">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>
-        500以上のゲームに対応
-      </div>
+      <div class="trust-item"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>広告・追跡なし</div>
+      <div class="trust-item"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>更新前に自動バックアップ</div>
+      <div class="trust-item"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>オープンソース (MIT)</div>
     </div>
   </div>
 
-  <!-- MOCKUP -->
   <div class="hero-right">
     <div class="mockup">
       <div class="mock-chrome">
         <div class="mock-chrome-btns">
-          <div class="mock-cb close"></div>
-          <div class="mock-cb min"></div>
-          <div class="mock-cb max"></div>
+          <div class="mock-cb close"></div><div class="mock-cb min"></div><div class="mock-cb max"></div>
         </div>
         <div class="mock-wintitle">ModSync 1.8.2</div>
-        <div class="mock-badge">3件の更新あり</div>
+        <div class="mock-badge">4件の更新あり</div>
       </div>
-
       <div class="mock-body">
-        <!-- sidebar -->
         <div class="mock-sidebar">
           <div class="mock-sb-section">ゲーム</div>
           <div class="mock-sb-item active">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
-            Skyrim SE
-            <span class="mock-sb-count red">3</span>
+            Skyrim SE<span class="mock-sb-count red">4</span>
           </div>
           <div class="mock-sb-item">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
-            Cyberpunk 2077
-            <span class="mock-sb-count teal">✓</span>
+            Valheim<span class="mock-sb-count teal">✓</span>
           </div>
           <div class="mock-sb-item">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
-            Minecraft
-            <span class="mock-sb-count teal">✓</span>
+            Lethal Co.<span class="mock-sb-count teal">✓</span>
           </div>
           <div class="mock-sb-item">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
-            Baldur's Gate 3
-            <span class="mock-sb-count muted">—</span>
+            Minecraft<span class="mock-sb-count muted">—</span>
           </div>
-          <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="1" y="3" width="12" height="9"/><path d="M4 3V2h6v1"/></svg>
-            Stardew Valley
-            <span class="mock-sb-count muted">—</span>
-          </div>
-          <div class="mock-sb-section" style="margin-top:4px">管理</div>
+          <div class="mock-sb-section" style="margin-top:auto">管理</div>
           <div class="mock-sb-item">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><path d="M7 1v9M3 6l4 4 4-4"/><path d="M1 12h12"/></svg>
             バックアップ
           </div>
           <div class="mock-sb-item">
             <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M7 4v3l2 1.5"/></svg>
-            更新履歴
-          </div>
-          <div class="mock-sb-item">
-            <svg class="mock-sb-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M7 4v2M7 9v.5"/></svg>
-            競合チェック
+            更新ログ
           </div>
         </div>
-
-        <!-- main -->
-        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
-          <!-- game tabs -->
-          <div class="mock-game-tabs">
-            <div class="mock-tab active">
-              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M2 8l3.5 3.5L12 4"/></svg>
-              すべて (14)
-            </div>
-            <div class="mock-tab">更新あり (3)</div>
-            <div class="mock-tab">有効 (12)</div>
+        <div class="mock-main">
+          <div class="mock-tabs">
+            <div class="mock-tab active">すべて (18)</div>
+            <div class="mock-tab">更新あり (4)</div>
+            <div class="mock-tab">有効 (16)</div>
             <div class="mock-tab">無効 (2)</div>
           </div>
-
-          <!-- toolbar -->
           <div class="mock-toolbar">
-            <button class="mock-tb-btn primary">
-              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M7 1v8M3 5l4 4 4-4"/></svg>
-              3件を更新
-            </button>
-            <button class="mock-tb-btn">
-              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="7" cy="7" r="5"/><path d="M5 7l2 2 2-2"/></svg>
-              スキャン
-            </button>
-            <button class="mock-tb-btn warn">
-              <svg width="9" height="9" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M7 2v5M7 9v.5"/></svg>
-              競合: 1件
-            </button>
-            <input class="mock-search" type="text" value="Modを検索..." readonly>
+            <button class="mock-tb-btn primary">4件を更新</button>
+            <button class="mock-tb-btn">スキャン</button>
+            <button class="mock-tb-btn warn">競合: 1件</button>
+            <input class="mock-search" type="text" value="検索..." readonly>
           </div>
-
-          <!-- table -->
           <div class="mock-table">
             <div class="mock-th">
-              <div></div>
-              <div>Mod名</div>
-              <div>現在</div>
-              <div>最新</div>
-              <div>ソース</div>
-              <div>状態</div>
+              <div></div><div>Mod名</div><div>現在</div><div>最新</div><div>状態</div>
             </div>
-
             <div class="mock-row update">
               <div class="mock-chk on"></div>
               <div class="mock-mod-name"><span>SKSE64</span><span class="mock-tag update">更新</span></div>
               <div class="mock-ver">2.2.5</div>
               <div class="mock-ver new">2.2.6</div>
-              <div class="mock-src">Nexus</div>
-              <div class="mock-prog"><div class="mock-prog-bar"><div class="mock-prog-fill" style="width:62%"></div></div></div>
+              <div class="mock-prog"><div class="mock-prog-bar"><div class="mock-prog-fill" style="width:58%"></div></div></div>
             </div>
             <div class="mock-row update">
               <div class="mock-chk on"></div>
               <div class="mock-mod-name"><span>SkyUI</span><span class="mock-tag update">更新</span></div>
               <div class="mock-ver">5.2.1</div>
               <div class="mock-ver new">5.2.3</div>
-              <div class="mock-src">Nexus</div>
               <div style="font-size:10px;color:var(--muted)">待機中</div>
             </div>
             <div class="mock-row update">
@@ -478,31 +395,27 @@
               <div class="mock-mod-name"><span>ENBSeries</span><span class="mock-tag update">更新</span></div>
               <div class="mock-ver">0.493</div>
               <div class="mock-ver new">0.497</div>
-              <div class="mock-src">GitHub</div>
               <div style="font-size:10px;color:var(--muted)">待機中</div>
             </div>
             <div class="mock-row">
               <div class="mock-chk on"></div>
-              <div class="mock-mod-name"><span>Unofficial Skyrim SE Patch</span></div>
+              <div class="mock-mod-name"><span>USSEP</span></div>
               <div class="mock-ver">4.3.0</div>
               <div class="mock-ver" style="color:var(--muted)">—</div>
-              <div class="mock-src">Nexus</div>
               <div><span class="mock-tag ok">最新</span></div>
             </div>
             <div class="mock-row error">
               <div class="mock-chk on"></div>
-              <div class="mock-mod-name"><span>Alternate Start</span><span class="mock-tag error">競合</span></div>
+              <div class="mock-mod-name"><span>Alternate Start</span><span class="mock-tag err">競合</span></div>
               <div class="mock-ver">4.1.7</div>
               <div class="mock-ver" style="color:var(--muted)">—</div>
-              <div class="mock-src">Nexus</div>
-              <div><span class="mock-tag error">要確認</span></div>
+              <div><span class="mock-tag err">要確認</span></div>
             </div>
             <div class="mock-row">
               <div class="mock-chk on"></div>
               <div class="mock-mod-name"><span>Immersive Armors</span></div>
               <div class="mock-ver">8.1</div>
               <div class="mock-ver" style="color:var(--muted)">—</div>
-              <div class="mock-src">Nexus</div>
               <div><span class="mock-tag ok">最新</span></div>
             </div>
             <div class="mock-row">
@@ -510,16 +423,14 @@
               <div class="mock-mod-name"><span style="opacity:.5">Frostfall</span></div>
               <div class="mock-ver" style="opacity:.5">3.4.0</div>
               <div class="mock-ver" style="color:var(--muted)">—</div>
-              <div class="mock-src" style="opacity:.5">Nexus</div>
-              <div><span class="mock-tag manual">無効</span></div>
+              <div><span class="mock-tag off">無効</span></div>
             </div>
           </div>
-
           <div class="mock-statusbar">
-            <span><span class="mock-led green"></span>スキャン完了</span>
-            <span>14 Mods</span>
-            <span style="color:var(--accent)">3件更新可能</span>
-            <span style="margin-left:auto">最終確認: 2分前</span>
+            <span><span class="mock-led on"></span>完了</span>
+            <span>18 Mods</span>
+            <span style="color:var(--accent)">4件更新可能</span>
+            <span style="margin-left:auto">3分前</span>
           </div>
         </div>
       </div>
@@ -527,17 +438,15 @@
   </div>
 </section>
 
-<!-- STATS -->
 <div class="stats-outer">
   <div class="stats-wrap">
-    <div class="stat"><div class="stat-num">500+</div><div class="stat-label">対応ゲーム数</div></div>
-    <div class="stat"><div class="stat-num">3,200万+</div><div class="stat-label">自動更新されたMod</div></div>
-    <div class="stat"><div class="stat-num">98.4%</div><div class="stat-label">更新成功率</div></div>
-    <div class="stat"><div class="stat-num">4.8 / 5</div><div class="stat-label">ユーザー評価</div></div>
+    <div class="stat"><div class="stat-num">2,400+</div><div class="stat-label">対応ゲーム数</div></div>
+    <div class="stat"><div class="stat-num">4,800万+</div><div class="stat-label">検出・更新されたMod</div></div>
+    <div class="stat"><div class="stat-num">99.1%</div><div class="stat-label">更新成功率</div></div>
+    <div class="stat"><div class="stat-num">4.9 / 5</div><div class="stat-label">ユーザー評価</div></div>
   </div>
 </div>
 
-<!-- FEATURES -->
 <section class="section" id="features">
   <div class="section-label">機能</div>
   <div class="section-title">Mod管理のすべてを自動化する</div>
@@ -546,108 +455,68 @@
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><circle cx="12" cy="12" r="7"/><path d="M17 17l7 7"/><path d="M9 12h6M12 9v6"/></svg>
       <div class="feat-title">自動Mod検出</div>
-      <div class="feat-desc">ゲームのインストールフォルダをスキャンし、導入済みModを自動で一覧化。Nexus Mods・CurseForge・GitHub Release に対応し、出所不明のローカルModも識別します。</div>
+      <div class="feat-desc">ゲームのフォルダをスキャンし、導入済みのプラグインやDLL系Modを自動で一覧化。バージョン情報を取得して管理対象として登録します。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M16 4v16M8 12l8 8 8-8"/><path d="M4 26h24"/></svg>
       <div class="feat-title">一括アップデート</div>
-      <div class="feat-desc">更新可能なModを一覧表示し、ワンクリックで全件更新。個別に選んで更新することも可能です。スケジュール設定でゲーム起動前の自動更新にも対応します。</div>
+      <div class="feat-desc">更新可能なModをワンクリックで全件更新。個別に選択して更新することも可能です。ゲーム起動前の自動更新スケジュールにも対応します。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M6 26V10l10-6 10 6v16"/><path d="M12 26v-8h8v8"/></svg>
       <div class="feat-title">更新前自動バックアップ</div>
-      <div class="feat-desc">更新を適用する前に、現在のMod構成を自動でバックアップ。問題が起きたら、ワンクリックで更新前の状態に完全ロールバックできます。</div>
+      <div class="feat-desc">更新を適用する前に現在のMod構成を自動バックアップ。問題が起きたらワンクリックで更新前の状態に完全ロールバックできます。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><path d="M8 8l16 16M24 8L8 24"/><circle cx="16" cy="16" r="12"/></svg>
       <div class="feat-title">競合チェック</div>
-      <div class="feat-desc">同じファイルを書き換えるModを自動検出し、競合の可能性を警告。ロードオーダーの問題も提案付きで表示するので、何が原因かすぐにわかります。</div>
+      <div class="feat-desc">同じファイルを書き換えるModを自動検出し、競合の可能性を警告。ロードオーダーの問題も提案付きで表示します。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><circle cx="16" cy="16" r="12"/><path d="M16 10v6l4 2"/></svg>
       <div class="feat-title">スケジュール更新</div>
-      <div class="feat-desc">「毎朝6時」「ゲーム起動5分前」など、好きなタイミングでの自動更新を設定可能。PC がアイドル中だけ動かすオプション付き。</div>
+      <div class="feat-desc">「毎朝6時」「ゲーム起動5分前」など好きなタイミングで自動更新を設定可能。PCがアイドル中だけ動かすオプション付き。</div>
     </div>
     <div class="feature">
       <svg class="feat-icon" viewBox="0 0 32 32" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="square"><rect x="4" y="8" width="24" height="16"/><path d="M4 13h24M10 8V5h12v3"/></svg>
       <div class="feat-title">プロファイル管理</div>
-      <div class="feat-desc">「バニラ」「重量Modあり」「軽量」など複数のMod構成をプロファイルとして保存。用途に合わせてワンクリックで切り替えられます。</div>
+      <div class="feat-desc">「軽量構成」「重量Modあり」など複数のMod構成をプロファイルとして保存し、ワンクリックで切り替えられます。</div>
     </div>
   </div>
 </section>
 
-<!-- COMPAT -->
 <section class="section" id="compat">
   <div class="section-label">対応ゲーム</div>
   <div class="section-title">主要対応タイトル（一部）</div>
-  <div class="section-sub">対応ゲームは毎月追加されます。リクエストは<a onclick="openModal('support-modal')" style="color:var(--accent);cursor:pointer">こちら</a>から。</div>
+  <div class="section-sub">2,400以上のゲームに対応。リクエストは<a onclick="openModal('support-modal')" style="color:var(--accent);cursor:pointer">こちら</a>から。</div>
   <div class="compat-grid">
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Skyrim Special Edition</div><div class="compat-tag">Nexus / GitHub · SKSE対応</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Minecraft (Java)</div><div class="compat-tag">CurseForge / Modrinth</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Cyberpunk 2077</div><div class="compat-tag">Nexus / GitHub</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Baldur's Gate 3</div><div class="compat-tag">Nexus / BG3 Mod Manager</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Stardew Valley</div><div class="compat-dot full"></div><div><div class="compat-name">Stardew Valley</div><div class="compat-tag">Nexus / SMAPI対応</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Fallout 4</div><div class="compat-tag">Nexus / F4SE対応</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">The Witcher 3</div><div class="compat-tag">Nexus</div></div></div>
-    <div class="compat-item"><div class="compat-dot part"></div><div><div class="compat-name">RimWorld</div><div class="compat-tag">Steam Workshop / Nexus</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Monster Hunter World</div><div class="compat-tag">Nexus</div></div></div>
-    <div class="compat-item"><div class="compat-dot part"></div><div><div class="compat-name">Valheim</div><div class="compat-tag">Nexus / Thunderstore</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Palworld</div><div class="compat-tag">Nexus</div></div></div>
-    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">その他 500+ タイトル</div><div class="compat-tag">汎用フォルダスキャン対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Skyrim Special Edition</div><div class="compat-tag">SKSE64 / DLL / ESP 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Skyrim Anniversary Edition</div><div class="compat-tag">SKSE64 AE / ESP 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Fallout 4</div><div class="compat-tag">F4SE / DLL / ESP 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Fallout: New Vegas</div><div class="compat-tag">NVSE / ESP 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Valheim</div><div class="compat-tag">プラグイン / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Lethal Company</div><div class="compat-tag">プラグイン / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Baldur's Gate 3</div><div class="compat-tag">PAK / SE 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Cyberpunk 2077</div><div class="compat-tag">REDmod / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Minecraft (Java)</div><div class="compat-tag">Fabric / Forge / Quilt JAR</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Stardew Valley</div><div class="compat-tag">SMAPI / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Monster Hunter World</div><div class="compat-tag">PAK / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Monster Hunter Rise</div><div class="compat-tag">PAK / REFramework 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Elden Ring</div><div class="compat-tag">PAK / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Dark Souls III</div><div class="compat-tag">PAK / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">RimWorld</div><div class="compat-tag">DLL / XML Mod 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">The Witcher 3</div><div class="compat-tag">DLC / Script Mod 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Palworld</div><div class="compat-tag">PAK / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Hollow Knight</div><div class="compat-tag">プラグイン / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Hades II</div><div class="compat-tag">プラグイン 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Risk of Rain 2</div><div class="compat-tag">プラグイン / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Subnautica</div><div class="compat-dot full"></div><div><div class="compat-name">Subnautica</div><div class="compat-tag">プラグイン / DLL 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">Satisfactory</div><div class="compat-tag">DLL / PAK 対応</div></div></div>
+    <div class="compat-item"><div class="compat-dot part"></div><div><div class="compat-name">GTA V</div><div class="compat-tag">Script / DLL 対応（一部）</div></div></div>
+    <div class="compat-item"><div class="compat-dot full"></div><div><div class="compat-name">その他 2,400+ タイトル</div><div class="compat-tag">汎用フォルダスキャン対応</div></div></div>
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="section" id="pricing">
-  <div class="section-label">価格</div>
-  <div class="section-title">完全無料で始められます</div>
-  <div class="section-sub">基本機能はすべて無料。ヘビーユーザー向けにProプランも用意しています。</div>
-  <div class="pricing-grid">
-    <div class="price-card">
-      <div class="price-name">Free</div>
-      <div class="price-amount">¥0 <span>/ 永久</span></div>
-      <div class="price-desc">ほとんどのユーザーにはこれで十分です</div>
-      <div class="price-features">
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>自動Mod検出（無制限）</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>一括アップデート</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>競合チェック</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>バックアップ（3世代）</div>
-        <div class="price-feat disabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 3l10 10M13 3L3 13"/></svg>スケジュール更新</div>
-        <div class="price-feat disabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 3l10 10M13 3L3 13"/></svg>プロファイル管理（無制限）</div>
-      </div>
-      <button class="price-btn" onclick="startDownload('win')">無料で始める</button>
-    </div>
-    <div class="price-card popular">
-      <div class="popular-badge">人気</div>
-      <div class="price-name">Pro</div>
-      <div class="price-amount">¥480 <span>/ 月</span></div>
-      <div class="price-desc">Modをがっつり使い込むゲーマー向け</div>
-      <div class="price-features">
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>Freeのすべての機能</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>スケジュール更新</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>プロファイル管理（無制限）</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>バックアップ（無制限世代）</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>優先サポート</div>
-      </div>
-      <button class="price-btn primary" onclick="openModal('pro-modal')">Pro を始める</button>
-    </div>
-    <div class="price-card">
-      <div class="price-name">OSS / 寄付</div>
-      <div class="price-amount">GitHub <span>/ MIT</span></div>
-      <div class="price-desc">コードを読みたい・ビルドしたい方へ</div>
-      <div class="price-features">
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>完全なソースコード公開</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>MITライセンス</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>Issue / PR 歓迎</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>自前ビルド・改変可</div>
-        <div class="price-feat enabled"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l3.5 3.5L14 4"/></svg>寄付で開発を支援</div>
-      </div>
-      <button class="price-btn" onclick="openModal('github-modal')">GitHub で見る</button>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
 <section class="section" id="faq">
   <div class="section-label">よくある質問</div>
   <div class="section-title">FAQ</div>
@@ -656,31 +525,31 @@
       <div class="faq-q" onclick="toggleFaq(this)">既存のMod管理ツール（Vortex / MO2）と何が違いますか？
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="faq-a">Vortex や MO2 はModのインストール・有効化・ロードオーダー管理が中心ですが、ModSync は「更新の検出と適用」に特化しています。既存ツールと併用できるよう設計されており、Vortex / MO2 が管理するフォルダをそのまま読み取って更新チェックを行います。ModSync に乗り換える必要はありません。</div>
+      <div class="faq-a">Vortex や MO2 はModのインストール・有効化・ロードオーダー管理が主な用途です。ModSync は「バージョン管理と更新の自動化」に特化しており、既存ツールと併用できます。Vortex / MO2 が管理するフォルダをそのまま読み取って更新チェックを行うため、乗り換え不要で今すぐ追加できます。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">更新によってセーブデータが壊れることはありませんか？
+      <div class="faq-q" onclick="toggleFaq(this)">更新でゲームやセーブデータが壊れることはありますか？
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="faq-a">更新前に必ず現在のMod構成をバックアップします（デフォルトで有効）。万が一問題が起きた場合はロールバック機能で更新前の状態に戻せます。ただし、Modの更新によるセーブデータへの影響はMod自体の互換性に依存するため、大型Modの更新時はご自身でも事前に情報を確認することをお勧めします。</div>
+      <div class="faq-a">更新前に必ず現在のMod構成をバックアップします（デフォルトで有効、最大3世代保持）。問題が起きた場合はロールバック機能で即座に元の状態に戻せます。ただし、Mod自体の互換性の問題はModSync では防げないため、大型Modの更新時は事前に情報を確認することを推奨します。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">NexusモーズのAPIキーが必要ですか？
+      <div class="faq-q" onclick="toggleFaq(this)">どうやってModのバージョンを管理していますか？
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="faq-a">Nexus Mods からの更新確認にはNexus ModsのAPIキーが必要です（無料アカウントで取得可能）。初回セットアップ時にModSyncが案内します。CurseForge・GitHub Release については追加のAPIキーは不要です。</div>
+      <div class="faq-a">各Modのmanifest / metadata ファイル、DLLのバージョン情報、ファイルのハッシュ値などを読み取り、バージョンを識別します。Modが対応する情報を持っていない場合は、ファイルの更新日時とサイズを補助情報として使用します。未知のModでも可能な限り検出を試みます。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Steam Workshopには対応していますか？
+      <div class="faq-q" onclick="toggleFaq(this)">インターネット接続は必要ですか？
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="faq-a">Steam Workshop はSteamクライアント自体が自動更新を行うため、ModSync では検出・表示のみ対応しています（更新の適用はSteamに任せる形）。Nexus Mods・CurseForge・GitHub から直接ダウンロードするタイプのModが主な対象です。</div>
+      <div class="faq-a">最新バージョンの確認と更新ファイルのダウンロードにはインターネット接続が必要です。ただし、既にダウンロード済みの更新の適用・バックアップ・ロールバックなどのローカル操作はオフラインでも動作します。</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">自動更新でゲームが壊れた場合はどうすればいいですか？
+      <div class="faq-q" onclick="toggleFaq(this)">自動更新でゲームが起動しなくなった場合は？
         <svg class="faq-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="square"><path d="M3 6l5 5 5-5"/></svg>
       </div>
-      <div class="faq-a">ModSync → 更新履歴 から対象の更新を選び、「ロールバック」ボタンを押すだけで元の状態に戻ります。バックアップはデフォルトで3世代（Proは無制限）保持されます。万が一バックアップが見つからない場合はサポートまでご連絡ください。</div>
+      <div class="faq-a">ModSync の「更新ログ」から問題の更新を選び「ロールバック」ボタンを押すだけで元の状態に戻ります。解決しない場合はサポートへご連絡ください。</div>
     </div>
   </div>
 </section>
@@ -693,14 +562,11 @@
       <a onclick="openModal('tos-modal')">利用規約</a>
       <a onclick="openModal('changelog-modal')">更新履歴</a>
       <a onclick="openModal('support-modal')">サポート</a>
-      <a onclick="openModal('github-modal')">GitHub</a>
     </div>
   </div>
 </footer>
 
 <!-- ══ MODALS ══ -->
-
-<!-- DL PROGRESS -->
 <div class="overlay" id="dl-modal">
   <div class="modal">
     <div class="modal-title" id="dl-title">ダウンロードを準備中...</div>
@@ -718,7 +584,6 @@
   </div>
 </div>
 
-<!-- macOS -->
 <div class="overlay" id="mac-modal" onclick="bgClose(event,'mac-modal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('mac-modal')">✕</button>
@@ -737,50 +602,22 @@
   </div>
 </div>
 
-<!-- Pro -->
-<div class="overlay" id="pro-modal" onclick="bgClose(event,'pro-modal')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('pro-modal')">✕</button>
-    <div class="modal-title">Pro プランに申し込む</div>
-    <div class="modal-sub">14日間の無料トライアルからどうぞ。クレジットカード不要。</div>
-    <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;text-align:left;margin-bottom:14px">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-family:var(--mono)">メールアドレスを入力</div>
-      <div style="border:1px solid var(--border2);padding:10px 12px;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:10px">your@email.com</div>
-      <button class="price-btn primary" style="width:100%" onclick="closeModal('pro-modal');startDownload('win')">無料トライアルを開始</button>
-    </div>
-    <p style="font-size:11px;color:var(--muted)">14日後に ¥480/月 に自動移行。いつでもキャンセル可能。</p>
-  </div>
-</div>
-
-<!-- GitHub -->
-<div class="overlay" id="github-modal" onclick="bgClose(event,'github-modal')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('github-modal')">✕</button>
-    <div class="modal-title">GitHub で見る</div>
-    <div class="modal-sub">MITライセンスで公開中</div>
-    <div style="background:var(--surface2);border:1px solid var(--border);padding:14px 16px;font-family:var(--mono);font-size:13px;color:var(--accent);text-align:left;margin-bottom:14px">github.com/modsync-app/modsync</div>
-    <p style="font-size:13px;color:var(--muted);line-height:1.7">Star・Issue・PR はいつでも歓迎します。ビルド手順は <span style="font-family:var(--mono);color:var(--accent)">README.md</span> を参照してください。</p>
-  </div>
-</div>
-
-<!-- Privacy -->
 <div class="overlay" id="privacy-modal" onclick="bgClose(event,'privacy-modal')">
   <div class="modal modal-text">
     <button class="modal-close" onclick="closeModal('privacy-modal')">✕</button>
     <h2>プライバシーポリシー</h2>
     <div class="modal-date">最終更新: 2025年11月18日</div>
     <h3>1. 収集する情報</h3>
-    <p>ModSync が収集する情報は以下に限られます。アカウント登録時のメールアドレス（Proプランのみ）、および設定で許可した場合の匿名化された利用統計（インストールMod数・更新回数など）のみです。ゲームデータ・セーブデータ・Modの内容を収集することはありません。</p>
-    <h3>2. Mod情報の取り扱い</h3>
-    <p>更新チェックのために Nexus Mods / CurseForge / GitHub の API を使用します。これらのAPIへのリクエストにはMod IDと現在のバージョン番号のみが含まれます。ファイルの内容や個人情報は送信されません。</p>
+    <p>ModSync が収集する情報は、設定で許可した場合の匿名化された利用統計（更新回数・使用ゲーム数など）のみです。ゲームデータ・セーブデータ・Modの内容を収集することはありません。アカウント登録は不要です。</p>
+    <h3>2. ネットワーク通信</h3>
+    <p>バージョン確認と更新ファイルのダウンロードのみに使用します。送信されるのはModのID・現在のバージョン番号のみで、ファイル内容や個人情報は一切送信しません。</p>
     <h3>3. ローカルデータ</h3>
-    <p>スキャン結果・バックアップ・プロファイルはすべてローカルに保存されます。クラウドへのアップロードは行いません。アプリをアンインストールすれば、すべてのローカルデータを削除できます。</p>
+    <p>スキャン結果・バックアップ・プロファイルはすべてローカルに保存されます。アプリをアンインストールすればすべてのローカルデータを削除できます。</p>
     <h3>4. お問い合わせ</h3>
     <p>privacy@modsync.app までご連絡ください。</p>
   </div>
 </div>
 
-<!-- ToS -->
 <div class="overlay" id="tos-modal" onclick="bgClose(event,'tos-modal')">
   <div class="modal modal-text">
     <button class="modal-close" onclick="closeModal('tos-modal')">✕</button>
@@ -790,32 +627,27 @@
     <p>ModSync は MIT ライセンスのオープンソースソフトウェアです。個人・商用を問わず自由に使用・改変・再配布できます。</p>
     <h3>2. 免責事項</h3>
     <p>Modの更新によるゲームデータやセーブデータへの影響について、ModSync は一切の責任を負いません。重要なデータは事前にバックアップを取ることを強く推奨します。</p>
-    <h3>3. 各ゲーム・Modの規約について</h3>
-    <p>ModSync は各Modの利用規約に従って更新を行います。Modの再配布・改変を行う場合は各Mod作者の規約を遵守してください。</p>
-    <h3>4. Proプランのサブスクリプション</h3>
-    <p>Proプランは月額課金です。キャンセルはいつでも可能で、次回更新日まで機能を利用できます。</p>
+    <h3>3. 各ゲーム・Modの規約</h3>
+    <p>各Modの利用規約はMod作者に帰属します。再配布・改変を行う場合は各Mod作者の規約を遵守してください。</p>
   </div>
 </div>
 
-<!-- Changelog -->
 <div class="overlay" id="changelog-modal" onclick="bgClose(event,'changelog-modal')">
   <div class="modal modal-text">
     <button class="modal-close" onclick="closeModal('changelog-modal')">✕</button>
     <h2>更新履歴</h2>
     <div class="modal-date">ModSync Release Notes</div>
     <h3>v1.8.2 — 2025.12.01</h3>
-    <p><strong style="color:var(--text)">新機能:</strong> Thunderstore（Valheim / Lethal Company等）に対応。ロールバック時に競合していたModも同時に復元するよう改善。</p>
-    <p><strong style="color:var(--text)">修正:</strong> Nexus Mods API のレート制限エラーを適切に処理するよう修正。Skyrim AE版でSKSEバージョンが正しく検出されない問題を修正。</p>
+    <p><strong style="color:var(--text)">修正:</strong> Skyrim AE版でバージョン検出が失敗するケースを修正。競合チェックの誤検知を削減。</p>
     <h3>v1.8.0 — 2025.10.14</h3>
-    <p><strong style="color:var(--text)">新機能:</strong> プロファイル管理機能を追加。スケジュール更新にアイドル検出を追加（Pro）。競合チェックの精度を大幅改善。</p>
-    <h3>v1.7.1 — 2025.08.22</h3>
-    <p><strong style="color:var(--text)">追加:</strong> Baldur's Gate 3 / Palworld に対応。バックアップの保持世代数を設定で変更可能に。</p>
-    <h3>v1.6.0 — 2025.06.05</h3>
-    <p><strong style="color:var(--text)">メジャー:</strong> CurseForge API に対応。UIを全面刷新。macOS 版をリリース。</p>
+    <p><strong style="color:var(--text)">新機能:</strong> プロファイル管理機能を追加。スケジュール更新にアイドル検出を追加。競合チェックの精度を大幅改善。</p>
+    <h3>v1.7.0 — 2025.08.01</h3>
+    <p><strong style="color:var(--text)">追加:</strong> Lethal Company / Risk of Rain 2 / Hades II に対応。バックアップ世代数を設定で変更可能に。</p>
+    <h3>v1.6.0 — 2025.05.20</h3>
+    <p><strong style="color:var(--text)">メジャー:</strong> macOS 版をリリース。UIを全面刷新。対応ゲーム数を1,000から2,400以上に拡大。</p>
   </div>
 </div>
 
-<!-- Support -->
 <div class="overlay" id="support-modal" onclick="bgClose(event,'support-modal')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('support-modal')">✕</button>
@@ -830,27 +662,21 @@
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="square"><path d="M4 20V8a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4z"/></svg>
         <div><div class="mac-opt-title">Discord コミュニティ</div><div class="mac-opt-desc">discord.gg/modsync（即レスが多いです）</div></div>
       </button>
-      <button class="mac-opt" onclick="openModal('github-modal')">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="var(--text)"><path d="M14 0C6.268 0 0 6.268 0 14c0 6.186 4.01 11.434 9.573 13.283.7.128.956-.301.956-.67v-2.605c-3.893.847-4.705-1.651-4.705-1.651-.635-1.617-1.55-2.047-1.55-2.047-1.27-.868.097-.85.097-.85 1.405.099 2.144 1.441 2.144 1.441 1.25 2.139 3.274 1.521 4.073 1.163.126-.904.488-1.521.888-1.87-3.104-.356-6.369-1.552-6.369-6.91 0-1.527.546-2.775 1.44-3.754-.144-.354-.624-1.776.136-3.703 0 0 1.175-.376 3.85 1.435A13.39 13.39 0 0114 6.768c1.19.006 2.387.161 3.506.472 2.67-1.811 3.843-1.435 3.843-1.435.762 1.927.282 3.349.138 3.703.898.979 1.438 2.227 1.438 3.754 0 5.372-3.27 6.55-6.384 6.898.502.434.96 1.287.96 2.593v3.842c0 .372.252.804.964.668C23.995 25.429 28 20.185 28 14c0-7.732-6.268-14-14-14z"/></svg>
-        <div><div class="mac-opt-title">GitHub Issues</div><div class="mac-opt-desc">バグ報告・機能リクエスト（推奨）</div></div>
-      </button>
     </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:14px">FAQは<a onclick="closeModal('support-modal');scrollToSection('faq')" style="color:var(--accent);cursor:pointer">こちら</a>も参照ください。</p>
   </div>
 </div>
 
-<!-- Rickroll preload -->
 <iframe id="yt-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none;opacity:0;pointer-events:none;"></iframe>
 
 <script>
   const DONE_SVG   = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="square"><path d="M2 8l4.5 4.5L14 4"/></svg>`;
   const ACTIVE_SVG = `<svg class="step-icon" viewBox="0 0 16 16" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-linecap="square"><rect x="2" y="2" width="12" height="12"/><path d="M5 8h6"/></svg>`;
-
   const dlConfigs = {
     win:        { title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (Windows 64-bit) を取得しています', size:'36.8 MB' },
     'mac-arm':  { title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (macOS Apple Silicon) を取得しています', size:'38.4 MB' },
     'mac-intel':{ title:'ダウンロードを準備中...', sub:'ModSync v1.8.2 (macOS Intel) を取得しています', size:'41.2 MB' },
   };
-
   function startDownload(type) {
     const cfg = dlConfigs[type] || dlConfigs.win;
     document.getElementById('dl-title').textContent = cfg.title;
@@ -867,11 +693,10 @@
     openModal('dl-modal');
     runProgress(cfg.size);
   }
-
   function runProgress(size) {
-    const fill  = document.getElementById('prog-fill');
-    const pct   = document.getElementById('prog-pct');
-    const txt   = document.getElementById('prog-text');
+    const fill = document.getElementById('prog-fill');
+    const pct  = document.getElementById('prog-pct');
+    const txt  = document.getElementById('prog-text');
     const steps = [
       { el:'s1', label:'サーバーへ接続中',              at:0,  done:18  },
       { el:'s2', label:'パッケージの整合性を確認中',     at:18, done:42  },
@@ -879,36 +704,28 @@
       { el:'s4', label:`パッケージをダウンロード中 (${size})`, at:60, done:100 },
     ];
     let start = null;
-    const duration = 4600;
+    const dur = 4600;
     function frame(ts) {
       if (!start) start = ts;
-      const p = Math.min((ts - start) / duration, 1);
+      const p = Math.min((ts - start) / dur, 1);
       const ease = 1 - Math.pow(1 - p, 3);
       const v = Math.round(ease * 100);
       fill.style.width = v + '%';
       pct.textContent  = v + '%';
       steps.forEach(s => {
         const el = document.getElementById(s.el);
-        if (v >= s.done) {
-          el.className = 'step done';
-          el.innerHTML = DONE_SVG + s.label;
-        } else if (v >= s.at) {
-          el.className = 'step active';
-          el.innerHTML = ACTIVE_SVG + s.label;
-          txt.textContent = s.label;
-        }
+        if (v >= s.done) { el.className = 'step done'; el.innerHTML = DONE_SVG + s.label; }
+        else if (v >= s.at) { el.className = 'step active'; el.innerHTML = ACTIVE_SVG + s.label; txt.textContent = s.label; }
       });
       if (p < 1) requestAnimationFrame(frame);
       else setTimeout(prepareRickroll, 300);
     }
     requestAnimationFrame(frame);
   }
-
   function prepareRickroll() {
     document.getElementById('yt-frame').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
     setTimeout(showRickroll, 500);
   }
-
   function showRickroll() {
     const frame = document.getElementById('yt-frame');
     document.body.removeChild(frame);
@@ -920,7 +737,6 @@
     frame.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;';
     document.body.appendChild(frame);
   }
-
   function openModal(id)  { document.getElementById(id).classList.add('active'); }
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
   function bgClose(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
